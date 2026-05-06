@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/browser")({
   head: () => ({
@@ -19,36 +19,14 @@ function normalize(u: string) {
 
 function BrowserPage() {
   const [input, setInput] = useState("");
-  const [url, setUrl] = useState("");
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  const inject = () => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-    try {
-      const doc = iframe.contentDocument;
-      if (!doc) throw new Error("cross-origin");
-      const s = doc.createElement("script");
-      s.src = window.location.origin + "/nastaleeq.js?v=" + Date.now();
-      doc.body.appendChild(s);
-    } catch {
-      // cross-origin — cannot inject. User will see iframe but no nastaleeq.
-    }
-  };
+  const [proxied, setProxied] = useState("");
 
   const go = (e?: React.FormEvent) => {
     e?.preventDefault();
-    setUrl(normalize(input));
+    const target = normalize(input);
+    if (!target) return;
+    setProxied(`/api/proxy?url=${encodeURIComponent(target)}`);
   };
-
-  useEffect(() => {
-    if (!url) return;
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-    const onLoad = () => inject();
-    iframe.addEventListener("load", onLoad);
-    return () => iframe.removeEventListener("load", onLoad);
-  }, [url]);
 
   return (
     <div dir="rtl" className="flex flex-col h-screen bg-background text-foreground">
@@ -68,10 +46,10 @@ function BrowserPage() {
           جائیں
         </button>
       </form>
-      {url ? (
+      {proxied ? (
         <iframe
-          ref={iframeRef}
-          src={url}
+          key={proxied}
+          src={proxied}
           className="flex-1 w-full border-0"
           title="in-app browser"
         />
@@ -79,7 +57,7 @@ function BrowserPage() {
         <div className="flex-1 flex items-center justify-center p-6 text-center text-muted-foreground" style={{ fontFamily: "'Noto Nastaliq Urdu', serif", lineHeight: 2 }}>
           <div>
             <p className="text-lg mb-2">اوپر کسی اردو ویب سائٹ کا پتہ درج کریں۔</p>
-            <p className="text-sm">نوٹ: کچھ سائٹس سیکیورٹی کی وجہ سے iframe میں نہیں کھلتیں۔ ایسی صورت میں بُک مارک لیٹ یا ایکسٹینشن استعمال کریں۔</p>
+            <p className="text-sm">سائٹ سرور کے ذریعے لوڈ ہو گی اور خودکار طور پر جمیل نوری نستعلیق میں دکھائی دے گی۔</p>
           </div>
         </div>
       )}

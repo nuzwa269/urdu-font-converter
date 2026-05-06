@@ -62,14 +62,23 @@ function Index() {
           >
             📌 نستعلیق ٹول
           </a>
-          <details className="mt-4 text-sm text-muted-foreground">
-            <summary className="cursor-pointer">موبائل پر بُک مارک کیسے بنائیں؟</summary>
-            <ol className="mt-2 mr-5 list-decimal space-y-1 leading-loose">
-              <li>اوپر بٹن پر دبا کر رکھیں اور لنک کاپی کریں۔</li>
-              <li>کوئی بھی صفحہ بُک مارک کریں۔</li>
-              <li>اس بُک مارک کو ایڈٹ کر کے اس کا URL کاپی شدہ <code>javascript:</code> کوڈ سے بدل دیں۔</li>
-              <li>کسی اردو سائٹ پر جا کر ایڈریس بار میں اس بُک مارک کا نام لکھ کر منتخب کریں۔</li>
-            </ol>
+          <details className="mt-4 text-sm text-muted-foreground" open>
+            <summary className="cursor-pointer font-semibold">موبائل پر بُک مارک کیسے بنائیں؟</summary>
+            <div className="mt-3 space-y-3 leading-loose">
+              <div>
+                <p className="font-semibold text-foreground">Firefox Android (آسان طریقہ):</p>
+                <ol className="mr-5 list-decimal">
+                  <li>اوپر بٹن پر دبا کر رکھیں → "Copy link"۔</li>
+                  <li>کوئی بھی صفحہ کھول کر بُک مارک کریں (⋮ → Bookmark)۔</li>
+                  <li>Bookmarks میں جا کر اسے Edit کریں، URL کی جگہ کاپی شدہ <code>javascript:</code> کوڈ پیسٹ کریں، نام "نستعلیق" رکھیں۔</li>
+                  <li>کسی اردو سائٹ پر جا کر ایڈریس بار میں <code>نستعلیق</code> لکھیں اور suggestion پر ٹیپ کریں۔</li>
+                </ol>
+              </div>
+              <div>
+                <p className="font-semibold text-foreground">Chrome Android:</p>
+                <p>Chrome بُک مارک لیٹس بلاک کرتا ہے۔ ایڈریس بار میں <code>javascript:</code> ٹائپ کر کے کاپی شدہ کوڈ paste کریں اور Enter دبائیں۔ آسان متبادل: نیچے دیا گیا <strong>ان-ایپ براؤزر</strong> استعمال کریں۔</p>
+              </div>
+            </div>
           </details>
         </section>
 
