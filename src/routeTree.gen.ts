@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ConverterRouteImport } from './routes/converter'
 import { Route as BrowserRouteImport } from './routes/browser'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiProxyRouteImport } from './routes/api/proxy'
 
+const ConverterRoute = ConverterRouteImport.update({
+  id: '/converter',
+  path: '/converter',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrowserRoute = BrowserRouteImport.update({
   id: '/browser',
   path: '/browser',
@@ -32,35 +38,46 @@ const ApiProxyRoute = ApiProxyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/browser': typeof BrowserRoute
+  '/converter': typeof ConverterRoute
   '/api/proxy': typeof ApiProxyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/browser': typeof BrowserRoute
+  '/converter': typeof ConverterRoute
   '/api/proxy': typeof ApiProxyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/browser': typeof BrowserRoute
+  '/converter': typeof ConverterRoute
   '/api/proxy': typeof ApiProxyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/browser' | '/api/proxy'
+  fullPaths: '/' | '/browser' | '/converter' | '/api/proxy'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/browser' | '/api/proxy'
-  id: '__root__' | '/' | '/browser' | '/api/proxy'
+  to: '/' | '/browser' | '/converter' | '/api/proxy'
+  id: '__root__' | '/' | '/browser' | '/converter' | '/api/proxy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BrowserRoute: typeof BrowserRoute
+  ConverterRoute: typeof ConverterRoute
   ApiProxyRoute: typeof ApiProxyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/converter': {
+      id: '/converter'
+      path: '/converter'
+      fullPath: '/converter'
+      preLoaderRoute: typeof ConverterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/browser': {
       id: '/browser'
       path: '/browser'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BrowserRoute: BrowserRoute,
+  ConverterRoute: ConverterRoute,
   ApiProxyRoute: ApiProxyRoute,
 }
 export const routeTree = rootRouteImport
