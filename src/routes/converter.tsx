@@ -81,42 +81,77 @@ function ConverterPage() {
   const [active, setActive] = useState<Font>(FONTS[0]);
 
   const copy = async () => {
-    try { await navigator.clipboard.writeText(text); alert("متن کاپی ہو گیا"); }
-    catch { alert("کاپی نہیں ہو سکا"); }
+    const fam = `${active.family}, ${active.fallback || "serif"}`;
+    const escaped = text
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/\n/g, "<br>");
+    const html = `<div dir="rtl" style="font-family:${fam};font-size:${size}px;line-height:${lineHeight};">${escaped}</div>`;
+    try {
+      if ((window as any).ClipboardItem && navigator.clipboard?.write) {
+        const item = new (window as any).ClipboardItem({
+          "text/html": new Blob([html], { type: "text/html" }),
+          "text/plain": new Blob([text], { type: "text/plain" }),
+        });
+        await navigator.clipboard.write([item]);
+      } else {
+        await navigator.clipboard.writeText(text);
+      }
+      alert("متن اسی فونٹ میں کاپی ہو گیا (ورڈ/جی میل میں پیسٹ کریں)");
+    } catch {
+      try { await navigator.clipboard.writeText(text); alert("متن کاپی ہو گیا"); }
+      catch { alert("کاپی نہیں ہو سکا"); }
+    }
   };
 
   const downloadPng = async () => {
-    const w = 1200;
-    const padding = 60;
-    const fontPx = Math.max(28, size * 1.4);
-    // Create offscreen canvas
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d")!;
-    const fam = `${active.family}, ${active.fallback || "serif"}`;
+    try {
+      const w = 1200;
+      const padding = 60;
+      const fontPx = Math.max(28, size * 1.4);
+      const fam = `${active.family}, ${active.fallback || "serif"}`;
 
-    // Wait for font to load
-    try { await (document as any).fonts?.load(`${fontPx}px ${active.family}`); } catch {}
+      // Ensure font is loaded before drawing
+      try {
+        const fontsApi: any = (document as any).fonts;
+        if (fontsApi?.load) {
+          await fontsApi.load(`${fontPx}px ${active.family}`, text || "ا");
+          await fontsApi.ready;
+        }
+      } catch {}
 
-    ctx.font = `${fontPx}px ${fam}`;
-    const lines = wrapText(ctx, text, w - padding * 2);
-    const lh = fontPx * lineHeight;
-    const h = Math.ceil(padding * 2 + lines.length * lh);
-    canvas.width = w;
-    canvas.height = h;
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d")!;
+      ctx.font = `${fontPx}px ${fam}`;
+      const lines = wrapText(ctx, text || SAMPLE, w - padding * 2);
+      const lh = fontPx * lineHeight;
+      const h = Math.ceil(padding * 2 + lines.length * lh);
+      canvas.width = w;
+      canvas.height = h;
 
-    ctx.fillStyle = dark ? "#111" : "#fff";
-    ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = dark ? "#f5f5f5" : "#111";
-    ctx.font = `${fontPx}px ${fam}`;
-    ctx.textBaseline = "top";
-    ctx.direction = "rtl";
-    ctx.textAlign = "right";
-    lines.forEach((line, i) => ctx.fillText(line, w - padding, padding + i * lh));
+      ctx.fillStyle = dark ? "#111" : "#fff";
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = dark ? "#f5f5f5" : "#111";
+      ctx.font = `${fontPx}px ${fam}`;
+      ctx.textBaseline = "top";
+      ctx.direction = "rtl";
+      ctx.textAlign = "right";
+      lines.forEach((line, i) => ctx.fillText(line, w - padding, padding + i * lh));
 
-    const a = document.createElement("a");
-    a.href = canvas.toDataURL("image/png");
-    a.download = `urdu-${active.id}.png`;
-    a.click();
+      canvas.toBlob((blob) => {
+        if (!blob) { alert("PNG نہیں بن سکا"); return; }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `urdu-${active.id}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, "image/png");
+    } catch (err) {
+      console.error(err);
+      alert("PNG ڈاؤنلوڈ میں مسئلہ آیا");
+    }
   };
 
   return (
