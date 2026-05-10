@@ -201,7 +201,7 @@ function ConverterPage() {
             </label>
             <div className="flex gap-2 col-span-2 md:col-span-1">
               <button onClick={copy} className="flex-1 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm">کاپی</button>
-              <button onClick={downloadPng} className="flex-1 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold">PNG</button>
+              <button onClick={downloadPng} disabled={busy} className="flex-1 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busy ? "..." : "PNG"}</button>
             </div>
           </div>
         </section>
