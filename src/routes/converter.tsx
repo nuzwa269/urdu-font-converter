@@ -80,6 +80,21 @@ function ConverterPage() {
   const [lineHeight, setLineHeight] = useState(2.2);
   const [dark, setDark] = useState(false);
   const [active, setActive] = useState<Font>(FONTS[0]);
+  const [busy, setBusy] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  const ensureFont = async (font: Font, sample: string, px: number) => {
+    const fontsApi: any = (document as any).fonts;
+    if (!fontsApi?.load) return;
+    const family = font.family.replace(/^'|'$/g, "");
+    const targets = [
+      `${px}px "${family}"`,
+      `bold ${px}px "${family}"`,
+      `${Math.max(16, Math.round(px * 0.8))}px "${family}"`,
+    ];
+    await Promise.all(targets.map(t => fontsApi.load(t, sample).catch(() => {})));
+    await fontsApi.ready.catch(() => {});
+  };
 
   const copy = async () => {
     const fam = `${active.family}, ${active.fallback || "serif"}`;
