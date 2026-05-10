@@ -48,26 +48,26 @@ function Index() {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-8 space-y-8">
+      <main className="max-w-3xl mx-auto px-4 py-8 space-y-6 sm:space-y-8 [&_code]:break-all [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_section_h2]:break-words">
         {/* Method 1: Bookmarklet */}
-        <section className="rounded-xl border border-border p-5 bg-card">
-          <h2 className="text-2xl font-semibold mb-2">۱۔ بُک مارک لیٹ (سب سے آسان)</h2>
-          <p className="text-muted-foreground leading-loose mb-4">
+        <section className="rounded-xl border border-border p-4 sm:p-5 bg-card">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۱۔ بُک مارک لیٹ (سب سے آسان)</h2>
+          <p className="text-muted-foreground leading-loose mb-4 text-sm sm:text-base">
             نیچے دیے گئے بٹن کو دبا کر رکھیں اور اسے اپنے براؤزر کے بُک مارکس میں محفوظ کر لیں۔ پھر کسی بھی اردو ویب سائٹ پر جا کر اس بُک مارک پر ٹیپ کریں — ٹول چالو ہو جائے گا۔
           </p>
           <a
             href={bookmarklet}
             onClick={(e) => e.preventDefault()}
-            className="inline-block px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold no-underline"
+            className="inline-flex items-center justify-center min-h-12 px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold no-underline"
           >
             📌 نستعلیق ٹول
           </a>
-          <details className="mt-4 text-sm text-muted-foreground" open>
-            <summary className="cursor-pointer font-semibold">موبائل پر بُک مارک کیسے بنائیں؟</summary>
+          <details className="mt-4 text-sm text-muted-foreground">
+            <summary className="cursor-pointer font-semibold py-2">موبائل پر بُک مارک کیسے بنائیں؟</summary>
             <div className="mt-3 space-y-3 leading-loose">
               <div>
                 <p className="font-semibold text-foreground">Firefox Android (آسان طریقہ):</p>
-                <ol className="mr-5 list-decimal">
+                <ol className="mr-5 list-decimal space-y-1">
                   <li>اوپر بٹن پر دبا کر رکھیں → "Copy link"۔</li>
                   <li>کوئی بھی صفحہ کھول کر بُک مارک کریں (⋮ → Bookmark)۔</li>
                   <li>Bookmarks میں جا کر اسے Edit کریں، URL کی جگہ کاپی شدہ <code>javascript:</code> کوڈ پیسٹ کریں، نام "نستعلیق" رکھیں۔</li>
@@ -83,18 +83,18 @@ function Index() {
         </section>
 
         {/* Method 2: Extension */}
-        <section className="rounded-xl border border-border p-5 bg-card">
-          <h2 className="text-2xl font-semibold mb-2">۲۔ اینڈرائیڈ ایکسٹینشن (Kiwi / Firefox)</h2>
-          <p className="text-muted-foreground leading-loose mb-4">
+        <section className="rounded-xl border border-border p-4 sm:p-5 bg-card">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۲۔ اینڈرائیڈ ایکسٹینشن (Kiwi / Firefox)</h2>
+          <p className="text-muted-foreground leading-loose mb-4 text-sm sm:text-base">
             Kiwi Browser یا Firefox for Android میں ایکسٹینشن انسٹال کر کے ہر سائٹ پر خودکار طور پر نستعلیق فونٹ لگائیں۔
           </p>
           <button
             onClick={downloadExtension}
-            className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold"
+            className="inline-flex items-center justify-center min-h-12 px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold"
           >
             ⬇ ایکسٹینشن ڈاؤن لوڈ کریں
           </button>
-          <ol className="mt-4 mr-5 list-decimal text-sm text-muted-foreground space-y-1 leading-loose">
+          <ol className="mt-4 mr-5 list-decimal text-sm text-muted-foreground space-y-1.5 leading-loose">
             <li>زپ فائل ڈاؤن لوڈ کر کے اَن زپ کریں۔</li>
             <li>Kiwi Browser میں <code>chrome://extensions</code> کھولیں۔</li>
             <li>Developer mode آن کریں اور "Load unpacked" دبا کر فولڈر منتخب کریں۔</li>
@@ -103,28 +103,28 @@ function Index() {
         </section>
 
         {/* Method 3: In-app browser */}
-        <section className="rounded-xl border border-border p-5 bg-card">
-          <h2 className="text-2xl font-semibold mb-2">۳۔ ان-ایپ براؤزر</h2>
-          <p className="text-muted-foreground leading-loose mb-4">
+        <section className="rounded-xl border border-border p-4 sm:p-5 bg-card">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۳۔ ان-ایپ براؤزر</h2>
+          <p className="text-muted-foreground leading-loose mb-4 text-sm sm:text-base">
             کسی بھی اردو ویب سائٹ کا پتہ درج کریں اور اسے فوراً نستعلیق میں پڑھیں — کوئی انسٹال کی ضرورت نہیں۔
           </p>
           <a
             href="/browser"
-            className="inline-block px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold no-underline"
+            className="inline-flex items-center justify-center min-h-12 px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold no-underline"
           >
             🌐 ان-ایپ براؤزر کھولیں
           </a>
         </section>
 
         {/* Method 4: Font converter */}
-        <section className="rounded-xl border border-border p-5 bg-card">
-          <h2 className="text-2xl font-semibold mb-2">۴۔ اردو فونٹ کنورٹر</h2>
-          <p className="text-muted-foreground leading-loose mb-4">
+        <section className="rounded-xl border border-border p-4 sm:p-5 bg-card">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۴۔ اردو فونٹ کنورٹر</h2>
+          <p className="text-muted-foreground leading-loose mb-4 text-sm sm:text-base">
             اپنا اردو متن لکھ کر سات خوبصورت فونٹس میں دیکھیں — جمیل نوری نستعلیق، القلم تاج، علوی نستعلیق، مہر نستعلیق، گلزار، نوٹو نستعلیق، اور امیری۔ متن کاپی کریں یا تصویر (PNG) ڈاؤن لوڈ کریں۔
           </p>
           <a
             href="/converter"
-            className="inline-block px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold no-underline"
+            className="inline-flex items-center justify-center min-h-12 px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold no-underline"
           >
             ✍ کنورٹر کھولیں
           </a>
