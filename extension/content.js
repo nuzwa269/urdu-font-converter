@@ -15,7 +15,7 @@
 
   var defaults = {
     enabled: true,
-    size: 120, // %
+    size: 100, // %
     lineHeight: 200, // %
     weight: 400,
     dark: false,
