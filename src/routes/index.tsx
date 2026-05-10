@@ -41,8 +41,8 @@ function Index() {
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap" />
       <header className="border-b border-border">
         <div className="max-w-3xl mx-auto px-4 py-6">
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight">اردو نستعلیق ٹول</h1>
-          <p className="mt-3 text-muted-foreground text-lg leading-loose">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight break-words">اردو نستعلیق ٹول</h1>
+          <p className="mt-3 text-muted-foreground text-base sm:text-lg leading-loose break-words">
             موبائل پر کسی بھی اردو ویب سائٹ کو <strong>جمیل نوری نستعلیق</strong> فونٹ میں دیکھیں۔ فونٹ کا سائز، سطور کا فاصلہ، وزن اور ڈارک موڈ خود کنٹرول کریں۔
           </p>
         </div>
