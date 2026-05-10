@@ -223,6 +223,7 @@ function ConverterPage() {
         {/* Big preview of active font */}
         <section
           ref={previewRef as any}
+          className="rounded-xl border border-border p-6"
           style={{
             fontFamily: active.family + ", " + (active.fallback || "serif"),
             fontSize: size,
