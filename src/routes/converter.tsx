@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { toPng } from "html-to-image";
 
 export const Route = createFileRoute("/converter")({
   head: () => ({
@@ -79,6 +80,21 @@ function ConverterPage() {
   const [lineHeight, setLineHeight] = useState(2.2);
   const [dark, setDark] = useState(false);
   const [active, setActive] = useState<Font>(FONTS[0]);
+  const [busy, setBusy] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  const ensureFont = async (font: Font, sample: string, px: number) => {
+    const fontsApi: any = (document as any).fonts;
+    if (!fontsApi?.load) return;
+    const family = font.family.replace(/^'|'$/g, "");
+    const targets = [
+      `${px}px "${family}"`,
+      `bold ${px}px "${family}"`,
+      `${Math.max(16, Math.round(px * 0.8))}px "${family}"`,
+    ];
+    await Promise.all(targets.map(t => fontsApi.load(t, sample).catch(() => {})));
+    await fontsApi.ready.catch(() => {});
+  };
 
   const copy = async () => {
     const fam = `${active.family}, ${active.fallback || "serif"}`;
@@ -104,53 +120,42 @@ function ConverterPage() {
   };
 
   const downloadPng = async () => {
+    if (busy) return;
+    setBusy(true);
     try {
-      const w = 1200;
-      const padding = 60;
-      const fontPx = Math.max(28, size * 1.4);
-      const fam = `${active.family}, ${active.fallback || "serif"}`;
+      const sample = text || SAMPLE;
+      // 1) Make sure the active font is fully loaded
+      await ensureFont(active, sample, size);
+      // 2) Double rAF so the preview node has painted with final glyphs
+      await new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 
-      // Ensure font is loaded before drawing
-      try {
-        const fontsApi: any = (document as any).fonts;
-        if (fontsApi?.load) {
-          await fontsApi.load(`${fontPx}px ${active.family}`, text || "ا");
-          await fontsApi.ready;
-        }
-      } catch {}
+      const node = previewRef.current;
+      if (!node) throw new Error("preview missing");
 
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d")!;
-      ctx.font = `${fontPx}px ${fam}`;
-      const lines = wrapText(ctx, text || SAMPLE, w - padding * 2);
-      const lh = fontPx * lineHeight;
-      const h = Math.ceil(padding * 2 + lines.length * lh);
-      canvas.width = w;
-      canvas.height = h;
+      // 3) Render the EXACT preview DOM to PNG — guarantees parity with screen
+      const bg = dark ? "#111111" : getComputedStyle(node).backgroundColor || "#ffffff";
+      const dataUrl = await toPng(node, {
+        cacheBust: true,
+        pixelRatio: Math.max(2, window.devicePixelRatio || 1),
+        backgroundColor: bg,
+        skipFonts: false,
+        style: {
+          // Lock width so wrapping matches the on-screen layout
+          width: `${node.clientWidth}px`,
+        },
+      });
 
-      ctx.fillStyle = dark ? "#111" : "#fff";
-      ctx.fillRect(0, 0, w, h);
-      ctx.fillStyle = dark ? "#f5f5f5" : "#111";
-      ctx.font = `${fontPx}px ${fam}`;
-      ctx.textBaseline = "top";
-      ctx.direction = "rtl";
-      ctx.textAlign = "right";
-      lines.forEach((line, i) => ctx.fillText(line, w - padding, padding + i * lh));
-
-      canvas.toBlob((blob) => {
-        if (!blob) { alert("PNG نہیں بن سکا"); return; }
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `urdu-${active.id}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-      }, "image/png");
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `urdu-${active.id}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     } catch (err) {
       console.error(err);
-      alert("PNG ڈاؤنلوڈ میں مسئلہ آیا");
+      alert("PNG ڈاؤنلوڈ میں مسئلہ آیا — دوبارہ کوشش کریں");
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -196,7 +201,7 @@ function ConverterPage() {
             </label>
             <div className="flex gap-2 col-span-2 md:col-span-1">
               <button onClick={copy} className="flex-1 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm">کاپی</button>
-              <button onClick={downloadPng} className="flex-1 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold">PNG</button>
+              <button onClick={downloadPng} disabled={busy} className="flex-1 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busy ? "..." : "PNG"}</button>
             </div>
           </div>
         </section>
@@ -217,6 +222,7 @@ function ConverterPage() {
 
         {/* Big preview of active font */}
         <section
+          ref={previewRef as any}
           className="rounded-xl border border-border p-6"
           style={{
             fontFamily: active.family + ", " + (active.fallback || "serif"),
