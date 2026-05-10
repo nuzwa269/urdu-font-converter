@@ -160,7 +160,7 @@ function ConverterPage() {
   };
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background text-foreground" style={{ fontFamily: "'Noto Nastaliq Urdu', serif" }}>
+    <div dir="rtl" className="min-h-screen w-full overflow-x-hidden bg-background text-foreground" style={{ fontFamily: "'Noto Nastaliq Urdu', serif" }}>
       {/* Load all font CSS upfront */}
       {FONTS.map(f => f.css && <link key={f.id} rel="stylesheet" href={f.css} />)}
 
