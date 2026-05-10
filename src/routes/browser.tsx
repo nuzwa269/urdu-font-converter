@@ -29,10 +29,10 @@ function BrowserPage() {
   };
 
   return (
-    <div dir="rtl" className="flex flex-col h-screen bg-background text-foreground">
+    <div dir="rtl" className="flex flex-col h-[100dvh] w-full overflow-hidden bg-background text-foreground">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" />
-      <form onSubmit={go} className="flex gap-2 p-2 border-b border-border bg-card">
-        <a href="/" className="px-3 py-2 rounded bg-secondary text-secondary-foreground text-sm no-underline">←</a>
+      <form onSubmit={go} className="flex items-center gap-2 p-2 border-b border-border bg-card">
+        <a href="/" aria-label="واپس" className="shrink-0 inline-flex items-center justify-center min-h-10 min-w-10 rounded bg-secondary text-secondary-foreground text-base no-underline">←</a>
         <input
           dir="ltr"
           type="url"
@@ -40,9 +40,9 @@ function BrowserPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="https://example.com"
-          className="flex-1 px-3 py-2 rounded border border-input bg-background text-foreground text-sm"
+          className="flex-1 min-w-0 px-3 py-2 min-h-10 rounded border border-input bg-background text-foreground text-sm"
         />
-        <button type="submit" className="px-4 py-2 rounded bg-primary text-primary-foreground font-bold text-sm">
+        <button type="submit" className="shrink-0 min-h-10 px-4 py-2 rounded bg-primary text-primary-foreground font-bold text-sm">
           جائیں
         </button>
       </form>

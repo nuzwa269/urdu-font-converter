@@ -160,7 +160,7 @@ function ConverterPage() {
   };
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background text-foreground" style={{ fontFamily: "'Noto Nastaliq Urdu', serif" }}>
+    <div dir="rtl" className="min-h-screen w-full overflow-x-hidden bg-background text-foreground" style={{ fontFamily: "'Noto Nastaliq Urdu', serif" }}>
       {/* Load all font CSS upfront */}
       {FONTS.map(f => f.css && <link key={f.id} rel="stylesheet" href={f.css} />)}
 
@@ -186,44 +186,46 @@ function ConverterPage() {
             className="w-full p-3 rounded-lg border border-input bg-background text-foreground text-base"
             style={{ fontFamily: active.family + ", " + (active.fallback || "serif"), lineHeight: 2 }}
           />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mt-4">
             <label className="text-sm">
-              <div className="flex justify-between"><span>سائز</span><span>{size}px</span></div>
-              <input type="range" min={16} max={64} value={size} onChange={(e)=>setSize(+e.target.value)} className="w-full" />
+              <div className="flex justify-between mb-1"><span>سائز</span><span>{size}px</span></div>
+              <input type="range" min={16} max={64} value={size} onChange={(e)=>setSize(+e.target.value)} className="w-full h-6" />
             </label>
             <label className="text-sm">
-              <div className="flex justify-between"><span>سطور کا فاصلہ</span><span>{lineHeight.toFixed(1)}</span></div>
-              <input type="range" min={1.4} max={3.2} step={0.1} value={lineHeight} onChange={(e)=>setLineHeight(+e.target.value)} className="w-full" />
+              <div className="flex justify-between mb-1"><span>سطور کا فاصلہ</span><span>{lineHeight.toFixed(1)}</span></div>
+              <input type="range" min={1.4} max={3.2} step={0.1} value={lineHeight} onChange={(e)=>setLineHeight(+e.target.value)} className="w-full h-6" />
             </label>
-            <label className="text-sm flex items-center justify-between gap-2 col-span-2 md:col-span-1">
+            <label className="text-sm flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
               <span>ڈارک پری ویو</span>
-              <input type="checkbox" checked={dark} onChange={(e)=>setDark(e.target.checked)} />
+              <input type="checkbox" checked={dark} onChange={(e)=>setDark(e.target.checked)} className="h-5 w-5" />
             </label>
-            <div className="flex gap-2 col-span-2 md:col-span-1">
-              <button onClick={copy} className="flex-1 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm">کاپی</button>
-              <button onClick={downloadPng} disabled={busy} className="flex-1 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busy ? "..." : "PNG"}</button>
+            <div className="flex gap-2">
+              <button onClick={copy} className="flex-1 min-h-11 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold">کاپی</button>
+              <button onClick={downloadPng} disabled={busy} className="flex-1 min-h-11 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busy ? "..." : "PNG"}</button>
             </div>
           </div>
         </section>
 
         {/* Font tabs */}
-        <section className="flex flex-wrap gap-2">
-          {FONTS.map(f => (
-            <button
-              key={f.id}
-              onClick={() => setActive(f)}
-              className={`px-3 py-2 rounded-lg border text-sm transition ${active.id === f.id ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border"}`}
-              style={{ fontFamily: f.family + ", " + (f.fallback || "serif") }}
-            >
-              {f.name}
-            </button>
-          ))}
+        <section className="-mx-4 px-4 overflow-x-auto">
+          <div className="flex gap-2 min-w-max pb-1">
+            {FONTS.map(f => (
+              <button
+                key={f.id}
+                onClick={() => setActive(f)}
+                className={`shrink-0 min-h-11 px-4 py-2 rounded-lg border text-sm transition ${active.id === f.id ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border"}`}
+                style={{ fontFamily: f.family + ", " + (f.fallback || "serif") }}
+              >
+                {f.name}
+              </button>
+            ))}
+          </div>
         </section>
 
         {/* Big preview of active font */}
         <section
           ref={previewRef as any}
-          className="rounded-xl border border-border p-6"
+          className="rounded-xl border border-border p-4 sm:p-6 overflow-hidden"
           style={{
             fontFamily: active.family + ", " + (active.fallback || "serif"),
             fontSize: size,
@@ -231,6 +233,8 @@ function ConverterPage() {
             background: dark ? "#111" : "var(--card)",
             color: dark ? "#f5f5f5" : "var(--foreground)",
             minHeight: 160,
+            wordBreak: "break-word",
+            overflowWrap: "anywhere",
           }}
         >
           {text || <span className="text-muted-foreground">یہاں آپ کا متن دکھائی دے گا۔</span>}
@@ -240,12 +244,12 @@ function ConverterPage() {
         <section className="space-y-3">
           <h2 className="text-xl font-bold">تمام فونٹس کا موازنہ</h2>
           {FONTS.map(f => (
-            <div key={f.id} className="rounded-xl border border-border bg-card p-4">
-              <div className="flex justify-between items-center mb-2">
+            <div key={f.id} className="rounded-xl border border-border bg-card p-4 overflow-hidden">
+              <div className="flex justify-between items-center gap-2 mb-2">
                 <span className="text-xs text-muted-foreground" style={{ fontFamily: "system-ui" }}>{f.name}</span>
-                <button onClick={() => setActive(f)} className="text-xs px-2 py-1 rounded bg-secondary text-secondary-foreground">منتخب کریں</button>
+                <button onClick={() => setActive(f)} className="shrink-0 text-xs px-3 py-1.5 rounded bg-secondary text-secondary-foreground">منتخب کریں</button>
               </div>
-              <div style={{ fontFamily: f.family + ", " + (f.fallback || "serif"), fontSize: 22, lineHeight: 2 }}>
+              <div style={{ fontFamily: f.family + ", " + (f.fallback || "serif"), fontSize: 22, lineHeight: 2, wordBreak: "break-word", overflowWrap: "anywhere" }}>
                 {text || SAMPLE}
               </div>
             </div>
