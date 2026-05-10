@@ -186,22 +186,22 @@ function ConverterPage() {
             className="w-full p-3 rounded-lg border border-input bg-background text-foreground text-base"
             style={{ fontFamily: active.family + ", " + (active.fallback || "serif"), lineHeight: 2 }}
           />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mt-4">
             <label className="text-sm">
-              <div className="flex justify-between"><span>سائز</span><span>{size}px</span></div>
-              <input type="range" min={16} max={64} value={size} onChange={(e)=>setSize(+e.target.value)} className="w-full" />
+              <div className="flex justify-between mb-1"><span>سائز</span><span>{size}px</span></div>
+              <input type="range" min={16} max={64} value={size} onChange={(e)=>setSize(+e.target.value)} className="w-full h-6" />
             </label>
             <label className="text-sm">
-              <div className="flex justify-between"><span>سطور کا فاصلہ</span><span>{lineHeight.toFixed(1)}</span></div>
-              <input type="range" min={1.4} max={3.2} step={0.1} value={lineHeight} onChange={(e)=>setLineHeight(+e.target.value)} className="w-full" />
+              <div className="flex justify-between mb-1"><span>سطور کا فاصلہ</span><span>{lineHeight.toFixed(1)}</span></div>
+              <input type="range" min={1.4} max={3.2} step={0.1} value={lineHeight} onChange={(e)=>setLineHeight(+e.target.value)} className="w-full h-6" />
             </label>
-            <label className="text-sm flex items-center justify-between gap-2 col-span-2 md:col-span-1">
+            <label className="text-sm flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
               <span>ڈارک پری ویو</span>
-              <input type="checkbox" checked={dark} onChange={(e)=>setDark(e.target.checked)} />
+              <input type="checkbox" checked={dark} onChange={(e)=>setDark(e.target.checked)} className="h-5 w-5" />
             </label>
-            <div className="flex gap-2 col-span-2 md:col-span-1">
-              <button onClick={copy} className="flex-1 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm">کاپی</button>
-              <button onClick={downloadPng} disabled={busy} className="flex-1 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busy ? "..." : "PNG"}</button>
+            <div className="flex gap-2">
+              <button onClick={copy} className="flex-1 min-h-11 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold">کاپی</button>
+              <button onClick={downloadPng} disabled={busy} className="flex-1 min-h-11 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busy ? "..." : "PNG"}</button>
             </div>
           </div>
         </section>
