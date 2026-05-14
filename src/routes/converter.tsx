@@ -5,8 +5,8 @@ import { toPng } from "html-to-image";
 export const Route = createFileRoute("/converter")({
   head: () => ({
     meta: [
-      { title: "اردو فونٹ کنورٹر — جمیل نوری نستعلیق، القلم اور مزید" },
-      { name: "description", content: "اردو متن کو خوبصورت فونٹس (جمیل نوری نستعلیق، القلم، علوی نستعلیق، مہر نستعلیق، گلزار، اور نوٹو نستعلیق) میں دیکھیں اور کاپی/ڈاؤن لوڈ کریں۔" },
+      { title: "اردو فونٹ کنورٹر — ڈیزائن، کلر اور ڈاؤن لوڈ" },
+      { name: "description", content: "اردو متن کو 7 خوبصورت فونٹس میں دیکھیں، رنگ اور ڈیزائن منتخب کریں، اور PNG میں محفوظ کریں۔" },
     ],
   }),
   component: ConverterPage,
@@ -16,267 +16,339 @@ type Font = {
   id: string;
   name: string;
   family: string;
-  css?: string; // <link href>
+  css?: string;
   fallback?: string;
 };
 
 const FONTS: Font[] = [
-  {
-    id: "jameel",
-    name: "جمیل نوری نستعلیق",
-    family: "'Jameel Noori Nastaleeq'",
-    css: "https://fonts.cdnfonts.com/css/jameel-noori-nastaleeq",
-    fallback: "'Noto Nastaliq Urdu', serif",
-  },
-  {
-    id: "alqalam",
-    name: "القلم تاج نستعلیق",
-    family: "'Alqalam Taj Nastaleeq'",
-    css: "https://fonts.cdnfonts.com/css/alqalam-taj-nastaleeq",
-    fallback: "'Noto Nastaliq Urdu', serif",
-  },
-  {
-    id: "alvi",
-    name: "علوی نستعلیق",
-    family: "'Alvi Nastaleeq'",
-    css: "https://fonts.cdnfonts.com/css/alvi-nastaleeq",
-    fallback: "'Noto Nastaliq Urdu', serif",
-  },
-  {
-    id: "mehr",
-    name: "مہر نستعلیق",
-    family: "'Mehr Nastaliq Web'",
-    css: "https://fonts.googleapis.com/css2?family=Mehr+Nastaliq:wght@400..700&display=swap",
-    fallback: "'Noto Nastaliq Urdu', serif",
-  },
-  {
-    id: "gulzar",
-    name: "گلزار",
-    family: "'Gulzar'",
-    css: "https://fonts.googleapis.com/css2?family=Gulzar&display=swap",
-    fallback: "'Noto Nastaliq Urdu', serif",
-  },
-  {
-    id: "noto",
-    name: "نوٹو نستعلیق اردو",
-    family: "'Noto Nastaliq Urdu'",
-    css: "https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap",
-    fallback: "serif",
-  },
-  {
-    id: "amiri",
-    name: "امیری (نسخ)",
-    family: "'Amiri'",
-    css: "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap",
-    fallback: "serif",
-  },
+  { id: "jameel", name: "جمیل نوری نستعلیق", family: "'Jameel Noori Nastaleeq'", css: "https://fonts.cdnfonts.com/css/jameel-noori-nastaleeq", fallback: "'Noto Nastaliq Urdu', serif" },
+  { id: "alqalam", name: "القلم تاج نستعلیق", family: "'Alqalam Taj Nastaleeq'", css: "https://fonts.cdnfonts.com/css/alqalam-taj-nastaleeq", fallback: "'Noto Nastaliq Urdu', serif" },
+  { id: "alvi", name: "علوی نستعلیق", family: "'Alvi Nastaleeq'", css: "https://fonts.cdnfonts.com/css/alvi-nastaleeq", fallback: "'Noto Nastaliq Urdu', serif" },
+  { id: "mehr", name: "مہر نستعلیق", family: "'Mehr Nastaliq Web'", css: "https://fonts.googleapis.com/css2?family=Mehr+Nastaliq:wght@400..700&display=swap", fallback: "'Noto Nastaliq Urdu', serif" },
+  { id: "gulzar", name: "گلزار", family: "'Gulzar'", css: "https://fonts.googleapis.com/css2?family=Gulzar&display=swap", fallback: "'Noto Nastaliq Urdu', serif" },
+  { id: "noto", name: "نوٹو نستعلیق اردو", family: "'Noto Nastaliq Urdu'", css: "https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap", fallback: "serif" },
+  { id: "amiri", name: "امیری (نسخ)", family: "'Amiri'", css: "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap", fallback: "serif" },
 ];
 
-const SAMPLE = `اردو زبان کی خوبصورتی نستعلیق خط میں اپنی پوری شان سے جلوہ گر ہوتی ہے۔ یہ ایک سادہ سا جملہ ہے جس سے آپ مختلف فونٹس کا موازنہ کر سکتے ہیں۔`;
+const SAMPLE = `اردو زبان کی خوبصورتی نستعلیق خط میں اپنی پوری شان سے جلوہ گر ہوتی ہے۔`;
+
+// Curated design presets (text color, background — solid or gradient)
+const PRESETS: { name: string; fg: string; bg: string }[] = [
+  { name: "سفید/سادہ", fg: "#111111", bg: "#ffffff" },
+  { name: "کریم", fg: "#3a2a14", bg: "#fdf6e3" },
+  { name: "سیاہ", fg: "#f5f5f5", bg: "#111111" },
+  { name: "سنہری", fg: "#3a2a00", bg: "linear-gradient(135deg,#fde68a,#f59e0b)" },
+  { name: "سبز", fg: "#06281e", bg: "linear-gradient(135deg,#d1fae5,#10b981)" },
+  { name: "نیلا", fg: "#0b1e3a", bg: "linear-gradient(135deg,#dbeafe,#3b82f6)" },
+  { name: "گلابی", fg: "#3b0a2a", bg: "linear-gradient(135deg,#fce7f3,#ec4899)" },
+  { name: "ارغوانی", fg: "#1a0033", bg: "linear-gradient(135deg,#ede9fe,#8b5cf6)" },
+  { name: "غروب", fg: "#2a0a00", bg: "linear-gradient(135deg,#fed7aa,#f97316,#ef4444)" },
+  { name: "رات", fg: "#e6e6ff", bg: "linear-gradient(135deg,#0f172a,#312e81)" },
+  { name: "زمرد", fg: "#f0fff4", bg: "linear-gradient(135deg,#064e3b,#10b981)" },
+  { name: "گلاب گولڈ", fg: "#fff0f0", bg: "linear-gradient(135deg,#9d174d,#f59e0b)" },
+];
+
+type Style = {
+  fg: string;
+  bg: string;
+  size: number;
+  lineHeight: number;
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  align: "right" | "center" | "left";
+  shadow: boolean;
+};
+
+const DEFAULT_STYLE: Style = {
+  fg: "#111111",
+  bg: "#ffffff",
+  size: 30,
+  lineHeight: 2.2,
+  bold: false,
+  italic: false,
+  underline: false,
+  align: "right",
+  shadow: false,
+};
 
 function ConverterPage() {
   const [text, setText] = useState(SAMPLE);
-  const [size, setSize] = useState(28);
-  const [lineHeight, setLineHeight] = useState(2.2);
-  const [dark, setDark] = useState(false);
-  const [active, setActive] = useState<Font>(FONTS[0]);
-  const [busy, setBusy] = useState(false);
-  const previewRef = useRef<HTMLDivElement>(null);
+  // Per-font styles
+  const [styles, setStyles] = useState<Record<string, Style>>(() =>
+    FONTS.reduce((acc, f) => ({ ...acc, [f.id]: { ...DEFAULT_STYLE } }), {})
+  );
+  const [activeId, setActiveId] = useState(FONTS[0].id);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const refs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  const active = FONTS.find(f => f.id === activeId)!;
+  const aStyle = styles[activeId];
+
+  const updateStyle = (id: string, patch: Partial<Style>) =>
+    setStyles(s => ({ ...s, [id]: { ...s[id], ...patch } }));
+
+  const applyPreset = (id: string, p: { fg: string; bg: string }) =>
+    updateStyle(id, { fg: p.fg, bg: p.bg });
+
+  const randomDesign = (id: string) => {
+    const p = PRESETS[Math.floor(Math.random() * PRESETS.length)];
+    const sizes = [24, 28, 32, 36, 40, 44];
+    const lhs = [1.8, 2.0, 2.2, 2.4, 2.6];
+    const aligns: Style["align"][] = ["right", "center"];
+    updateStyle(id, {
+      fg: p.fg,
+      bg: p.bg,
+      size: sizes[Math.floor(Math.random() * sizes.length)],
+      lineHeight: lhs[Math.floor(Math.random() * lhs.length)],
+      bold: Math.random() > 0.5,
+      italic: false,
+      underline: Math.random() > 0.7,
+      align: aligns[Math.floor(Math.random() * aligns.length)],
+      shadow: Math.random() > 0.5,
+    });
+  };
 
   const ensureFont = async (font: Font, sample: string, px: number) => {
     const fontsApi: any = (document as any).fonts;
     if (!fontsApi?.load) return;
     const family = font.family.replace(/^'|'$/g, "");
-    const targets = [
-      `${px}px "${family}"`,
-      `bold ${px}px "${family}"`,
-      `${Math.max(16, Math.round(px * 0.8))}px "${family}"`,
-    ];
+    const targets = [`${px}px "${family}"`, `bold ${px}px "${family}"`];
     await Promise.all(targets.map(t => fontsApi.load(t, sample).catch(() => {})));
     await fontsApi.ready.catch(() => {});
   };
 
-  const copy = async () => {
-    const fam = `${active.family}, ${active.fallback || "serif"}`;
-    const escaped = text
+  const copy = async (font: Font, st: Style) => {
+    const fam = `${font.family}, ${font.fallback || "serif"}`;
+    const escaped = (text || SAMPLE)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/\n/g, "<br>");
-    const html = `<div dir="rtl" style="font-family:${fam};font-size:${size}px;line-height:${lineHeight};">${escaped}</div>`;
+    const deco = st.underline ? "underline" : "none";
+    const html = `<div dir="rtl" style="font-family:${fam};font-size:${st.size}px;line-height:${st.lineHeight};color:${st.fg};font-weight:${st.bold ? 700 : 400};font-style:${st.italic ? "italic" : "normal"};text-decoration:${deco};text-align:${st.align};">${escaped}</div>`;
     try {
       if ((window as any).ClipboardItem && navigator.clipboard?.write) {
         const item = new (window as any).ClipboardItem({
           "text/html": new Blob([html], { type: "text/html" }),
-          "text/plain": new Blob([text], { type: "text/plain" }),
+          "text/plain": new Blob([text || SAMPLE], { type: "text/plain" }),
         });
         await navigator.clipboard.write([item]);
       } else {
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(text || SAMPLE);
       }
-      alert("متن اسی فونٹ میں کاپی ہو گیا (ورڈ/جی میل میں پیسٹ کریں)");
+      alert("متن اسی اسٹائل میں کاپی ہو گیا");
     } catch {
-      try { await navigator.clipboard.writeText(text); alert("متن کاپی ہو گیا"); }
+      try { await navigator.clipboard.writeText(text || SAMPLE); alert("متن کاپی ہو گیا"); }
       catch { alert("کاپی نہیں ہو سکا"); }
     }
   };
 
-  const downloadPng = async () => {
-    if (busy) return;
-    setBusy(true);
+  const downloadPng = async (font: Font) => {
+    if (busyId) return;
+    setBusyId(font.id);
     try {
-      const sample = text || SAMPLE;
-      // 1) Make sure the active font is fully loaded
-      await ensureFont(active, sample, size);
-      // 2) Double rAF so the preview node has painted with final glyphs
+      const node = refs.current[font.id];
+      if (!node) throw new Error("missing");
+      await ensureFont(font, text || SAMPLE, styles[font.id].size);
       await new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
-
-      const node = previewRef.current;
-      if (!node) throw new Error("preview missing");
-
-      // 3) Render the EXACT preview DOM to PNG — guarantees parity with screen
-      const bg = dark ? "#111111" : getComputedStyle(node).backgroundColor || "#ffffff";
       const dataUrl = await toPng(node, {
         cacheBust: true,
         pixelRatio: Math.max(2, window.devicePixelRatio || 1),
-        backgroundColor: bg,
         skipFonts: false,
-        style: {
-          // Lock width so wrapping matches the on-screen layout
-          width: `${node.clientWidth}px`,
-        },
+        style: { width: `${node.clientWidth}px` },
       });
-
       const a = document.createElement("a");
       a.href = dataUrl;
-      a.download = `urdu-${active.id}.png`;
+      a.download = `urdu-${font.id}.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-    } catch (err) {
-      console.error(err);
-      alert("PNG ڈاؤنلوڈ میں مسئلہ آیا — دوبارہ کوشش کریں");
+    } catch (e) {
+      console.error(e);
+      alert("PNG ڈاؤنلوڈ میں مسئلہ آیا");
     } finally {
-      setBusy(false);
+      setBusyId(null);
     }
   };
 
-  return (
-    <div dir="rtl" className="min-h-screen w-full overflow-x-hidden bg-background text-foreground" style={{ fontFamily: "'Noto Nastaliq Urdu', serif" }}>
-      {/* Load all font CSS upfront */}
-      {FONTS.map(f => f.css && <link key={f.id} rel="stylesheet" href={f.css} />)}
-
-      <header className="border-b border-border">
-        <div className="max-w-4xl mx-auto px-4 py-5 flex items-center gap-3">
-          <a href="/" className="px-3 py-2 rounded bg-secondary text-secondary-foreground text-sm no-underline" style={{ fontFamily: "system-ui" }}>←</a>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold leading-tight">اردو فونٹ کنورٹر</h1>
-            <p className="text-sm text-muted-foreground mt-1">ٹائپ کریں اور خوبصورت اردو فونٹس میں دیکھیں۔</p>
+  const renderCard = (font: Font) => {
+    const st = styles[font.id];
+    const fontStack = font.family + ", " + (font.fallback || "serif");
+    return (
+      <div key={font.id} className="rounded-xl border border-border bg-card p-3 sm:p-4 space-y-3 overflow-hidden">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-xs font-semibold text-muted-foreground" style={{ fontFamily: "system-ui" }}>
+            {font.name}
+          </span>
+          <div className="flex gap-1">
+            <button
+              onClick={() => randomDesign(font.id)}
+              className="text-xs min-h-9 px-2.5 py-1.5 rounded bg-secondary text-secondary-foreground"
+              title="رینڈم ڈیزائن"
+            >🎲</button>
+            <button
+              onClick={() => setActiveId(font.id)}
+              className={`text-xs min-h-9 px-2.5 py-1.5 rounded ${activeId === font.id ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}
+            >
+              {activeId === font.id ? "✓" : "ایڈٹ"}
+            </button>
           </div>
         </div>
-      </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-        {/* Input */}
-        <section className="rounded-xl border border-border bg-card p-4">
-          <label className="block text-sm font-semibold mb-2">اپنا متن لکھیں</label>
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            rows={4}
-            dir="rtl"
-            className="w-full p-3 rounded-lg border border-input bg-background text-foreground text-base"
-            style={{ fontFamily: active.family + ", " + (active.fallback || "serif"), lineHeight: 2 }}
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-            <label className="text-sm">
-              <div className="flex justify-between mb-1"><span>سائز</span><span>{size}px</span></div>
-              <input type="range" min={16} max={64} value={size} onChange={(e)=>setSize(+e.target.value)} className="w-full h-6" />
-            </label>
-            <label className="text-sm">
-              <div className="flex justify-between mb-1"><span>سطور کا فاصلہ</span><span>{lineHeight.toFixed(1)}</span></div>
-              <input type="range" min={1.4} max={3.2} step={0.1} value={lineHeight} onChange={(e)=>setLineHeight(+e.target.value)} className="w-full h-6" />
-            </label>
-            <label className="text-sm flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2">
-              <span>ڈارک پری ویو</span>
-              <input type="checkbox" checked={dark} onChange={(e)=>setDark(e.target.checked)} className="h-5 w-5" />
-            </label>
-            <div className="flex gap-2">
-              <button onClick={copy} className="flex-1 min-h-11 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold">کاپی</button>
-              <button onClick={downloadPng} disabled={busy} className="flex-1 min-h-11 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busy ? "..." : "PNG"}</button>
-            </div>
-          </div>
-        </section>
-
-        {/* Font tabs */}
-        <section className="-mx-4 px-4 overflow-x-auto">
-          <div className="flex gap-2 min-w-max pb-1">
-            {FONTS.map(f => (
-              <button
-                key={f.id}
-                onClick={() => setActive(f)}
-                className={`shrink-0 min-h-11 px-4 py-2 rounded-lg border text-sm transition ${active.id === f.id ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border"}`}
-                style={{ fontFamily: f.family + ", " + (f.fallback || "serif") }}
-              >
-                {f.name}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Big preview of active font */}
-        <section
-          ref={previewRef as any}
-          className="rounded-xl border border-border p-4 sm:p-6 overflow-hidden"
+        {/* Preview */}
+        <div
+          ref={(el) => { refs.current[font.id] = el; }}
+          className="rounded-lg p-4 sm:p-6 overflow-hidden"
           style={{
-            fontFamily: active.family + ", " + (active.fallback || "serif"),
-            fontSize: size,
-            lineHeight: lineHeight,
-            background: dark ? "#111" : "var(--card)",
-            color: dark ? "#f5f5f5" : "var(--foreground)",
-            minHeight: 160,
+            fontFamily: fontStack,
+            fontSize: st.size,
+            lineHeight: st.lineHeight,
+            color: st.fg,
+            background: st.bg,
+            fontWeight: st.bold ? 700 : 400,
+            fontStyle: st.italic ? "italic" : "normal",
+            textDecoration: st.underline ? "underline" : "none",
+            textAlign: st.align,
+            textShadow: st.shadow ? "0 2px 8px rgba(0,0,0,0.35)" : "none",
+            minHeight: 140,
             wordBreak: "break-word",
             overflowWrap: "anywhere",
           }}
         >
-          {text || <span className="text-muted-foreground">یہاں آپ کا متن دکھائی دے گا۔</span>}
-        </section>
+          {text || SAMPLE}
+        </div>
 
-        {/* Compare all */}
-        <section className="space-y-3">
-          <h2 className="text-xl font-bold">تمام فونٹس کا موازنہ</h2>
-          {FONTS.map(f => (
-            <div key={f.id} className="rounded-xl border border-border bg-card p-4 overflow-hidden">
-              <div className="flex justify-between items-center gap-2 mb-2">
-                <span className="text-xs text-muted-foreground" style={{ fontFamily: "system-ui" }}>{f.name}</span>
-                <button onClick={() => setActive(f)} className="shrink-0 text-xs px-3 py-1.5 rounded bg-secondary text-secondary-foreground">منتخب کریں</button>
-              </div>
-              <div style={{ fontFamily: f.family + ", " + (f.fallback || "serif"), fontSize: 22, lineHeight: 2, wordBreak: "break-word", overflowWrap: "anywhere" }}>
-                {text || SAMPLE}
+        {/* Controls — only if active */}
+        {activeId === font.id && (
+          <div className="space-y-3 border-t border-border pt-3">
+            {/* Color presets */}
+            <div>
+              <div className="text-xs text-muted-foreground mb-1.5" style={{ fontFamily: "system-ui" }}>ڈیزائن پریسیٹس</div>
+              <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
+                {PRESETS.map((p, i) => (
+                  <button
+                    key={i}
+                    onClick={() => applyPreset(font.id, p)}
+                    className="shrink-0 h-9 w-12 rounded border border-border"
+                    style={{ background: p.bg, color: p.fg, fontSize: 12, fontWeight: 700 }}
+                    title={p.name}
+                  >ابج</button>
+                ))}
               </div>
             </div>
-          ))}
+
+            {/* Color pickers */}
+            <div className="grid grid-cols-2 gap-2">
+              <label className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2 text-xs">
+                <span>ٹیکسٹ کلر</span>
+                <input
+                  type="color"
+                  value={st.fg.startsWith("#") ? st.fg : "#111111"}
+                  onChange={(e) => updateStyle(font.id, { fg: e.target.value })}
+                  className="h-7 w-10 cursor-pointer rounded border-0 bg-transparent p-0"
+                />
+              </label>
+              <label className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2 text-xs">
+                <span>بیک گراؤنڈ</span>
+                <input
+                  type="color"
+                  value={st.bg.startsWith("#") ? st.bg : "#ffffff"}
+                  onChange={(e) => updateStyle(font.id, { bg: e.target.value })}
+                  className="h-7 w-10 cursor-pointer rounded border-0 bg-transparent p-0"
+                />
+              </label>
+            </div>
+
+            {/* Sliders */}
+            <div className="grid grid-cols-2 gap-3">
+              <label className="text-xs">
+                <div className="flex justify-between mb-1"><span>سائز</span><span>{st.size}px</span></div>
+                <input type="range" min={16} max={72} value={st.size} onChange={(e) => updateStyle(font.id, { size: +e.target.value })} className="w-full h-6" />
+              </label>
+              <label className="text-xs">
+                <div className="flex justify-between mb-1"><span>سطر فاصلہ</span><span>{st.lineHeight.toFixed(1)}</span></div>
+                <input type="range" min={1.4} max={3.4} step={0.1} value={st.lineHeight} onChange={(e) => updateStyle(font.id, { lineHeight: +e.target.value })} className="w-full h-6" />
+              </label>
+            </div>
+
+            {/* Toggles + alignment */}
+            <div className="flex flex-wrap gap-1.5" style={{ fontFamily: "system-ui" }}>
+              {([
+                ["B", "bold", st.bold],
+                ["I", "italic", st.italic],
+                ["U", "underline", st.underline],
+                ["S", "shadow", st.shadow],
+              ] as const).map(([label, key, val]) => (
+                <button
+                  key={key}
+                  onClick={() => updateStyle(font.id, { [key]: !val } as any)}
+                  className={`min-h-9 min-w-9 px-2.5 rounded text-sm font-bold ${val ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}
+                >{label}</button>
+              ))}
+              <div className="flex-1" />
+              {(["right", "center", "left"] as const).map(a => (
+                <button
+                  key={a}
+                  onClick={() => updateStyle(font.id, { align: a })}
+                  className={`min-h-9 min-w-9 px-2.5 rounded text-sm ${st.align === a ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}
+                  title={a}
+                >{a === "right" ? "⇥" : a === "center" ? "≡" : "⇤"}</button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="grid grid-cols-2 gap-2">
+          <button onClick={() => copy(font, st)} className="min-h-11 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold">کاپی</button>
+          <button onClick={() => downloadPng(font)} disabled={busyId === font.id} className="min-h-11 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busyId === font.id ? "..." : "PNG ڈاؤنلوڈ"}</button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div dir="rtl" className="min-h-screen w-full overflow-x-hidden bg-background text-foreground" style={{ fontFamily: "'Noto Nastaliq Urdu', serif" }}>
+      {FONTS.map(f => f.css && <link key={f.id} rel="stylesheet" href={f.css} />)}
+
+      <header className="border-b border-border">
+        <div className="max-w-5xl mx-auto px-4 py-5 flex items-center gap-3">
+          <a href="/" className="px-3 py-2 rounded bg-secondary text-secondary-foreground text-sm no-underline" style={{ fontFamily: "system-ui" }}>←</a>
+          <div className="min-w-0">
+            <h1 className="text-2xl md:text-3xl font-bold leading-tight">اردو فونٹ کنورٹر</h1>
+            <p className="text-sm text-muted-foreground mt-1">7 فونٹس، رنگ، ڈیزائن اور PNG ڈاؤنلوڈ</p>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+        {/* Input + global actions */}
+        <section className="rounded-xl border border-border bg-card p-4 space-y-3">
+          <label className="block text-sm font-semibold">اپنا متن لکھیں</label>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={3}
+            dir="rtl"
+            className="w-full p-3 rounded-lg border border-input bg-background text-foreground text-base"
+            style={{ fontFamily: active.family + ", " + (active.fallback || "serif"), lineHeight: 2 }}
+          />
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => FONTS.forEach(f => randomDesign(f.id))}
+              className="min-h-10 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold"
+            >🎲 سب کے لیے رینڈم ڈیزائن</button>
+            <button
+              onClick={() => setStyles(FONTS.reduce((acc, f) => ({ ...acc, [f.id]: { ...DEFAULT_STYLE } }), {}))}
+              className="min-h-10 px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold"
+            >ری سیٹ</button>
+          </div>
+        </section>
+
+        {/* Cards grid */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {FONTS.map(renderCard)}
         </section>
       </main>
     </div>
   );
-}
-
-function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
-  const paragraphs = text.split(/\n/);
-  const lines: string[] = [];
-  for (const para of paragraphs) {
-    const words = para.split(/\s+/);
-    let line = "";
-    for (const word of words) {
-      const test = line ? line + " " + word : word;
-      if (ctx.measureText(test).width > maxWidth && line) {
-        lines.push(line);
-        line = word;
-      } else {
-        line = test;
-      }
-    }
-    if (line) lines.push(line);
-    if (paragraphs.length > 1) lines.push("");
-  }
-  return lines;
 }
