@@ -234,6 +234,20 @@ function ConverterPage() {
         {/* Controls — only if active */}
         {activeId === font.id && (
           <div className="space-y-3 border-t border-border pt-3">
+            {/* Aspect ratio */}
+            <div>
+              <div className="text-xs text-muted-foreground mb-1.5" style={{ fontFamily: "system-ui" }}>کارڈ سائز (ریشو)</div>
+              <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1" style={{ fontFamily: "system-ui" }}>
+                {RATIOS.map(r => (
+                  <button
+                    key={r.id}
+                    onClick={() => updateStyle(font.id, { ratio: r.id })}
+                    className={`shrink-0 min-h-9 px-3 rounded text-xs font-semibold ${st.ratio === r.id ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}
+                  >{r.label}</button>
+                ))}
+              </div>
+            </div>
+
             {/* Color presets */}
             <div>
               <div className="text-xs text-muted-foreground mb-1.5" style={{ fontFamily: "system-ui" }}>ڈیزائن پریسیٹس</div>
