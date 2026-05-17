@@ -59,7 +59,74 @@ type Style = {
   align: "right" | "center" | "left";
   shadow: boolean;
   ratio: string; // "free" | "1:1" | "9:16" | "16:9" | "4:5" | "3:4" | "4:3"
+  frame: string; // frame id
 };
+
+const FRAMES: { id: string; label: string }[] = [
+  { id: "none", label: "بغیر فریم" },
+  { id: "thin", label: "باریک" },
+  { id: "thick", label: "موٹا" },
+  { id: "double", label: "دوہرا" },
+  { id: "dashed", label: "ڈیشڈ" },
+  { id: "dotted", label: "ڈاٹڈ" },
+  { id: "inset", label: "اندرونی" },
+  { id: "ornate", label: "آرائشی" },
+  { id: "gold", label: "سنہری" },
+  { id: "shadow", label: "سایہ" },
+  { id: "ring", label: "حلقہ" },
+  { id: "corners", label: "کونے" },
+];
+
+/** Returns inline style additions for the chosen frame, tinted by fg color. */
+function frameStyle(frame: string, fg: string): React.CSSProperties {
+  const c = fg || "#111";
+  switch (frame) {
+    case "thin":
+      return { border: `2px solid ${c}`, borderRadius: 12 };
+    case "thick":
+      return { border: `6px solid ${c}`, borderRadius: 14 };
+    case "double":
+      return { border: `6px double ${c}`, borderRadius: 12 };
+    case "dashed":
+      return { border: `3px dashed ${c}`, borderRadius: 14 };
+    case "dotted":
+      return { border: `3px dotted ${c}`, borderRadius: 14 };
+    case "inset":
+      return { border: `2px solid ${c}`, outline: `1px solid ${c}`, outlineOffset: 6, borderRadius: 10 };
+    case "ornate":
+      return {
+        border: `4px double ${c}`,
+        boxShadow: `inset 0 0 0 8px transparent, inset 0 0 0 10px ${c}`,
+        borderRadius: 6,
+      };
+    case "gold":
+      return {
+        border: "4px solid transparent",
+        backgroundImage: `var(--card-bg), linear-gradient(135deg,#f59e0b,#fde68a,#b45309,#fde68a,#f59e0b)`,
+        backgroundOrigin: "border-box",
+        backgroundClip: "padding-box, border-box",
+        borderRadius: 14,
+      } as React.CSSProperties;
+    case "shadow":
+      return { borderRadius: 14, boxShadow: `0 18px 40px -10px ${c}66, 0 6px 18px ${c}33` };
+    case "ring":
+      return { borderRadius: 9999, border: `3px solid ${c}` };
+    case "corners":
+      return {
+        borderRadius: 4,
+        backgroundImage:
+          `linear-gradient(${c},${c}),linear-gradient(${c},${c}),linear-gradient(${c},${c}),linear-gradient(${c},${c}),` +
+          `linear-gradient(${c},${c}),linear-gradient(${c},${c}),linear-gradient(${c},${c}),linear-gradient(${c},${c})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize:
+          "3px 22px, 22px 3px, 3px 22px, 22px 3px, 3px 22px, 22px 3px, 3px 22px, 22px 3px",
+        backgroundPosition:
+          "left top, left top, right top, right top, left bottom, left bottom, right bottom, right bottom",
+      };
+    default:
+      return {};
+  }
+}
 
 const RATIOS: { id: string; label: string }[] = [
   { id: "free", label: "آزاد" },
