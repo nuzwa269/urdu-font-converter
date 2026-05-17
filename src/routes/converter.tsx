@@ -305,8 +305,8 @@ function ConverterPage() {
             ...frameStyle(st.frame, st.fg),
           }}
         >
-          <div style={{ width: "100%", textAlign: st.align, wordBreak: "break-word", overflowWrap: "anywhere" }}>
-            {text || SAMPLE}
+          <div style={{ width: "100%", textAlign: st.align, wordBreak: "break-word", overflowWrap: "anywhere", whiteSpace: "pre-wrap" }}>
+            {st.sentenceBreak ? splitSentences(text || SAMPLE) : (text || SAMPLE)}
           </div>
         </div>
 
