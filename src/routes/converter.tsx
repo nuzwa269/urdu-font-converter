@@ -183,6 +183,7 @@ function ConverterPage() {
       underline: Math.random() > 0.7,
       align: aligns[Math.floor(Math.random() * aligns.length)],
       shadow: Math.random() > 0.5,
+      frame: FRAMES[Math.floor(Math.random() * FRAMES.length)].id,
     });
   };
 
