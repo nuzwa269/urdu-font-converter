@@ -129,21 +129,6 @@ function Index() {
             🌐 ان-ایپ براؤزر کھولیں
           </a>
         </section>
-
-        {/* Method 4: Font converter */}
-        <section className="rounded-xl border border-border p-4 sm:p-5 bg-card">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۴۔ اردو فونٹ کنورٹر</h2>
-          <p className="text-muted-foreground leading-loose mb-4 text-sm sm:text-base">
-            اپنا اردو متن لکھ کر سات خوبصورت فونٹس میں دیکھیں — جمیل نوری نستعلیق، القلم تاج، علوی نستعلیق، مہر نستعلیق، گلزار، نوٹو نستعلیق، اور امیری۔ متن کاپی کریں یا تصویر (PNG) ڈاؤن لوڈ کریں۔
-          </p>
-          <a
-            href="/converter"
-            className="inline-flex items-center justify-center min-h-12 px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold no-underline"
-          >
-            ✍ کنورٹر کھولیں
-          </a>
-        </section>
-
         <footer className="text-center text-sm text-muted-foreground pt-6">
           <p>تینوں طریقوں میں فونٹ سائز، سطور کا فاصلہ، فونٹ وزن، ڈارک موڈ اور آن/آف کنٹرول دستیاب ہیں۔</p>
         </footer>
