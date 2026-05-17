@@ -315,7 +315,30 @@ function ConverterPage() {
               </div>
             </div>
 
-            {/* Color presets */}
+            {/* Frame */}
+            <div>
+              <div className="text-xs text-muted-foreground mb-1.5" style={{ fontFamily: "system-ui" }}>فریم اسٹائل</div>
+              <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
+                {FRAMES.map(fr => (
+                  <button
+                    key={fr.id}
+                    onClick={() => updateStyle(font.id, { frame: fr.id })}
+                    className={`shrink-0 min-h-12 px-2 rounded text-[10px] font-semibold flex items-center justify-center ${st.frame === fr.id ? "ring-2 ring-primary" : ""}`}
+                    style={{
+                      width: 56,
+                      background: st.bg,
+                      color: st.fg,
+                      ...frameStyle(fr.id, st.fg),
+                    }}
+                    title={fr.label}
+                  >ابج</button>
+                ))}
+              </div>
+              <div className="text-[10px] text-muted-foreground mt-1" style={{ fontFamily: "system-ui" }}>
+                {FRAMES.find(f => f.id === st.frame)?.label}
+              </div>
+            </div>
+
             <div>
               <div className="text-xs text-muted-foreground mb-1.5" style={{ fontFamily: "system-ui" }}>ڈیزائن پریسیٹس</div>
               <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
