@@ -254,6 +254,7 @@ const DEFAULT_STYLE: Style = {
 
 export function ConverterPage() {
   const [text, setText] = useState(SAMPLE);
+  const [brand, setBrand] = useState("");
   const [customFonts, setCustomFonts] = useState<Font[]>([]);
   const allFonts = [...FONTS, ...customFonts];
   // Per-font styles
@@ -446,6 +447,19 @@ export function ConverterPage() {
         >
           <div style={{ width: "100%", textAlign: st.align, wordBreak: "break-word", overflowWrap: "anywhere", whiteSpace: "pre-wrap" }}>
             {st.sentenceBreak ? splitSentences(text || SAMPLE) : (text || SAMPLE)}
+            {brand.trim() && (
+              <div
+                style={{
+                  marginTop: Math.max(12, st.size * 0.8),
+                  fontSize: Math.max(11, Math.round(st.size * 0.45)),
+                  opacity: 0.75,
+                  fontWeight: 600,
+                  letterSpacing: 0.3,
+                }}
+              >
+                {brand.trim()}
+              </div>
+            )}
           </div>
         </div>
 
@@ -631,6 +645,26 @@ export function ConverterPage() {
               onClick={() => setStyles(allFonts.reduce((acc, f) => ({ ...acc, [f.id]: { ...DEFAULT_STYLE } }), {}))}
               className="min-h-10 px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold"
             >ری سیٹ</button>
+          </div>
+
+          {/* Optional brand / name */}
+          <div className="border-t border-border pt-3 space-y-1.5">
+            <label className="block text-sm font-semibold">
+              اپنا نام یا برانڈ <span className="text-xs font-normal text-muted-foreground">(اختیاری)</span>
+            </label>
+            <input
+              type="text"
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+              dir="rtl"
+              placeholder="مثلاً: @آپ کا نام"
+              maxLength={60}
+              className="w-full p-2.5 rounded-lg border border-input bg-background text-foreground text-sm"
+              style={{ fontFamily: active.family + ", " + (active.fallback || "serif") }}
+            />
+            <p className="text-[11px] text-muted-foreground" style={{ fontFamily: "system-ui" }}>
+              خالی چھوڑیں تو ڈیزائن میں کوئی فرق نہیں پڑے گا۔
+            </p>
           </div>
 
           {/* Custom font upload */}
