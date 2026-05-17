@@ -116,9 +116,9 @@ function Index() {
           </ol>
         </section>
 
-        {/* Method 3: In-app browser */}
+        {/* Method 4: In-app browser */}
         <section className="rounded-xl border border-border p-4 sm:p-5 bg-card">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۳۔ ان-ایپ براؤزر</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۴۔ ان-ایپ براؤزر</h2>
           <p className="text-muted-foreground leading-loose mb-4 text-sm sm:text-base">
             کسی بھی اردو ویب سائٹ کا پتہ درج کریں اور اسے فوراً نستعلیق میں پڑھیں — کوئی انسٹال کی ضرورت نہیں۔
           </p>
