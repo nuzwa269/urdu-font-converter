@@ -290,6 +290,7 @@ function ConverterPage() {
             aspectRatio: st.ratio === "free" ? undefined : st.ratio.replace(":", " / "),
             alignItems: "center",
             justifyContent: st.align === "right" ? "flex-end" : st.align === "left" ? "flex-start" : "center",
+            ...frameStyle(st.frame, st.fg),
           }}
         >
           <div style={{ width: "100%", textAlign: st.align, wordBreak: "break-word", overflowWrap: "anywhere" }}>
