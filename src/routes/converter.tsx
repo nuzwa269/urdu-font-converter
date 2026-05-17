@@ -161,7 +161,7 @@ const DEFAULT_STYLE: Style = {
   sentenceBreak: false,
 };
 
-function ConverterPage() {
+export function ConverterPage() {
   const [text, setText] = useState(SAMPLE);
   // Per-font styles
   const [styles, setStyles] = useState<Record<string, Style>>(() =>
