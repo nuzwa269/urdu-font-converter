@@ -87,6 +87,14 @@ const FRAMES: { id: string; label: string }[] = [
   { id: "shadow", label: "سایہ" },
   { id: "ring", label: "حلقہ" },
   { id: "corners", label: "کونے" },
+  { id: "klasik", label: "کلاسک" },
+  { id: "mughal", label: "مغل" },
+  { id: "tazhib", label: "تذہیب" },
+  { id: "qitaa", label: "قطعہ" },
+  { id: "manuscript", label: "مخطوطہ" },
+  { id: "naqsh", label: "نقش" },
+  { id: "minar", label: "مینار" },
+  { id: "arabesque", label: "اسلیمی" },
 ];
 
 /** Returns inline style additions for the chosen frame, tinted by fg color. */
@@ -131,6 +139,88 @@ function frameStyle(frame: string, fg: string): React.CSSProperties {
           "3px 22px, 22px 3px, 3px 22px, 22px 3px, 3px 22px, 22px 3px, 3px 22px, 22px 3px",
         backgroundPosition:
           "left top, left top, right top, right top, left bottom, left bottom, right bottom, right bottom",
+      };
+    case "klasik":
+      // Classic triple border: outer thin, gap, inner thin (manuscript-like)
+      return {
+        border: `2px solid ${c}`,
+        boxShadow: `inset 0 0 0 6px transparent, inset 0 0 0 7px ${c}, inset 0 0 0 11px transparent, inset 0 0 0 12px ${c}`,
+        borderRadius: 10,
+      };
+    case "mughal":
+      // Mughal-era illuminated border: deep + gold + deep layered rings
+      return {
+        borderRadius: 8,
+        boxShadow:
+          `0 0 0 2px #7c2d12, 0 0 0 4px #fde68a, 0 0 0 6px #b45309, ` +
+          `0 0 0 9px #fde68a, 0 0 0 11px #7c2d12, ` +
+          `inset 0 0 0 3px #b45309, inset 0 0 0 5px #fde68a`,
+      };
+    case "tazhib":
+      // Illumination (تذہیب) — gold gradient with inset shadow
+      return {
+        borderRadius: 12,
+        border: `6px solid transparent`,
+        backgroundImage:
+          `linear-gradient(currentColor,currentColor), linear-gradient(135deg,#fde68a 0%,#b45309 40%,#fde68a 60%,#92400e 100%)`,
+        backgroundOrigin: "border-box",
+        backgroundClip: "content-box, border-box",
+        boxShadow: `inset 0 0 0 2px #92400e`,
+      };
+    case "qitaa":
+      // Manuscript قطعہ: thick outer + gap + thin inner with corner dots
+      return {
+        border: `4px solid ${c}`,
+        boxShadow: `inset 0 0 0 6px transparent, inset 0 0 0 7px ${c}`,
+        borderRadius: 2,
+        backgroundImage:
+          `radial-gradient(circle, ${c} 2.5px, transparent 3px),` +
+          `radial-gradient(circle, ${c} 2.5px, transparent 3px),` +
+          `radial-gradient(circle, ${c} 2.5px, transparent 3px),` +
+          `radial-gradient(circle, ${c} 2.5px, transparent 3px)`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "10px 10px",
+        backgroundPosition: "10px 10px, calc(100% - 10px) 10px, 10px calc(100% - 10px), calc(100% - 10px) calc(100% - 10px)",
+      };
+    case "manuscript":
+      // Parchment-style: double outer + offset shadow + warm inset
+      return {
+        border: `3px double ${c}`,
+        borderRadius: 6,
+        boxShadow:
+          `inset 0 0 0 8px transparent, inset 0 0 0 9px ${c}55, ` +
+          `0 8px 24px ${c}33`,
+      };
+    case "naqsh":
+      // Geometric pattern border via repeating gradient
+      return {
+        border: `8px solid transparent`,
+        borderRadius: 8,
+        backgroundImage:
+          `linear-gradient(currentColor,currentColor),` +
+          `repeating-linear-gradient(45deg, ${c} 0 4px, transparent 4px 8px)`,
+        backgroundOrigin: "border-box",
+        backgroundClip: "content-box, border-box",
+      };
+    case "minar":
+      // Mihrab/minaret-like: thick top & bottom, thin sides
+      return {
+        borderTop: `8px solid ${c}`,
+        borderBottom: `8px solid ${c}`,
+        borderLeft: `2px solid ${c}`,
+        borderRight: `2px solid ${c}`,
+        boxShadow: `inset 0 0 0 4px transparent, inset 0 0 0 5px ${c}`,
+        borderRadius: 4,
+      };
+    case "arabesque":
+      // Islamic-style: double rings + soft gold halo
+      return {
+        border: `2px solid ${c}`,
+        borderRadius: 16,
+        boxShadow:
+          `0 0 0 4px #fde68a55, 0 0 0 6px ${c}, ` +
+          `inset 0 0 0 4px transparent, inset 0 0 0 5px ${c}55, ` +
+          `inset 0 0 0 10px transparent, inset 0 0 0 11px ${c}`,
       };
     default:
       return {};
