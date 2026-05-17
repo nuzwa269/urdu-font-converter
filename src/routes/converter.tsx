@@ -18,16 +18,17 @@ type Font = {
   family: string;
   css?: string;
   fallback?: string;
+  download?: string; // direct font download URL (TTF/OTF/ZIP) or info page
 };
 
 const FONTS: Font[] = [
-  { id: "jameel", name: "جمیل نوری نستعلیق", family: "'Jameel Noori Nastaleeq'", css: "https://fonts.cdnfonts.com/css/jameel-noori-nastaleeq", fallback: "'Noto Nastaliq Urdu', serif" },
-  { id: "alqalam", name: "القلم تاج نستعلیق", family: "'Alqalam Taj Nastaleeq'", css: "https://fonts.cdnfonts.com/css/alqalam-taj-nastaleeq", fallback: "'Noto Nastaliq Urdu', serif" },
-  { id: "alvi", name: "علوی نستعلیق", family: "'Alvi Nastaleeq'", css: "https://fonts.cdnfonts.com/css/alvi-nastaleeq", fallback: "'Noto Nastaliq Urdu', serif" },
-  { id: "mehr", name: "مہر نستعلیق", family: "'Mehr Nastaliq Web'", css: "https://fonts.googleapis.com/css2?family=Mehr+Nastaliq:wght@400..700&display=swap", fallback: "'Noto Nastaliq Urdu', serif" },
-  { id: "gulzar", name: "گلزار", family: "'Gulzar'", css: "https://fonts.googleapis.com/css2?family=Gulzar&display=swap", fallback: "'Noto Nastaliq Urdu', serif" },
-  { id: "noto", name: "نوٹو نستعلیق اردو", family: "'Noto Nastaliq Urdu'", css: "https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap", fallback: "serif" },
-  { id: "amiri", name: "امیری (نسخ)", family: "'Amiri'", css: "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap", fallback: "serif" },
+  { id: "jameel", name: "جمیل نوری نستعلیق", family: "'Jameel Noori Nastaleeq'", css: "https://fonts.cdnfonts.com/css/jameel-noori-nastaleeq", fallback: "'Noto Nastaliq Urdu', serif", download: "https://www.cdnfonts.com/jameel-noori-nastaleeq.font" },
+  { id: "alqalam", name: "القلم تاج نستعلیق", family: "'Alqalam Taj Nastaleeq'", css: "https://fonts.cdnfonts.com/css/alqalam-taj-nastaleeq", fallback: "'Noto Nastaliq Urdu', serif", download: "https://www.cdnfonts.com/alqalam-taj-nastaleeq.font" },
+  { id: "alvi", name: "علوی نستعلیق", family: "'Alvi Nastaleeq'", css: "https://fonts.cdnfonts.com/css/alvi-nastaleeq", fallback: "'Noto Nastaliq Urdu', serif", download: "https://www.cdnfonts.com/alvi-nastaleeq.font" },
+  { id: "mehr", name: "مہر نستعلیق", family: "'Mehr Nastaliq Web'", css: "https://fonts.googleapis.com/css2?family=Mehr+Nastaliq:wght@400..700&display=swap", fallback: "'Noto Nastaliq Urdu', serif", download: "https://fonts.google.com/specimen/Mehr+Nastaliq" },
+  { id: "gulzar", name: "گلزار", family: "'Gulzar'", css: "https://fonts.googleapis.com/css2?family=Gulzar&display=swap", fallback: "'Noto Nastaliq Urdu', serif", download: "https://fonts.google.com/specimen/Gulzar" },
+  { id: "noto", name: "نوٹو نستعلیق اردو", family: "'Noto Nastaliq Urdu'", css: "https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap", fallback: "serif", download: "https://fonts.google.com/noto/specimen/Noto+Nastaliq+Urdu" },
+  { id: "amiri", name: "امیری (نسخ)", family: "'Amiri'", css: "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap", fallback: "serif", download: "https://fonts.google.com/specimen/Amiri" },
 ];
 
 const SAMPLE = `اردو زبان کی خوبصورتی نستعلیق خط میں اپنی پوری شان سے جلوہ گر ہوتی ہے۔`;
@@ -493,6 +494,14 @@ export function ConverterPage() {
           <button onClick={() => copy(font, st)} className="min-h-11 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold">کاپی</button>
           <button onClick={() => downloadPng(font)} disabled={busyId === font.id} className="min-h-11 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busyId === font.id ? "..." : "PNG ڈاؤنلوڈ"}</button>
         </div>
+        {font.download && (
+          <a
+            href={font.download}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-center min-h-11 px-3 py-2.5 rounded-lg bg-accent text-accent-foreground text-sm font-semibold no-underline"
+          >⬇ فونٹ ڈاؤنلوڈ کریں</a>
+        )}
       </div>
     );
   };
