@@ -59,7 +59,71 @@ type Style = {
   align: "right" | "center" | "left";
   shadow: boolean;
   ratio: string; // "free" | "1:1" | "9:16" | "16:9" | "4:5" | "3:4" | "4:3"
+  frame: string; // frame id
 };
+
+const FRAMES: { id: string; label: string }[] = [
+  { id: "none", label: "بغیر فریم" },
+  { id: "thin", label: "باریک" },
+  { id: "thick", label: "موٹا" },
+  { id: "double", label: "دوہرا" },
+  { id: "dashed", label: "ڈیشڈ" },
+  { id: "dotted", label: "ڈاٹڈ" },
+  { id: "inset", label: "اندرونی" },
+  { id: "ornate", label: "آرائشی" },
+  { id: "gold", label: "سنہری" },
+  { id: "shadow", label: "سایہ" },
+  { id: "ring", label: "حلقہ" },
+  { id: "corners", label: "کونے" },
+];
+
+/** Returns inline style additions for the chosen frame, tinted by fg color. */
+function frameStyle(frame: string, fg: string): React.CSSProperties {
+  const c = fg || "#111";
+  switch (frame) {
+    case "thin":
+      return { border: `2px solid ${c}`, borderRadius: 12 };
+    case "thick":
+      return { border: `6px solid ${c}`, borderRadius: 14 };
+    case "double":
+      return { border: `6px double ${c}`, borderRadius: 12 };
+    case "dashed":
+      return { border: `3px dashed ${c}`, borderRadius: 14 };
+    case "dotted":
+      return { border: `3px dotted ${c}`, borderRadius: 14 };
+    case "inset":
+      return { border: `2px solid ${c}`, outline: `1px solid ${c}`, outlineOffset: 6, borderRadius: 10 };
+    case "ornate":
+      return {
+        border: `4px double ${c}`,
+        boxShadow: `inset 0 0 0 8px transparent, inset 0 0 0 10px ${c}`,
+        borderRadius: 6,
+      };
+    case "gold":
+      return {
+        borderRadius: 14,
+        boxShadow: `0 0 0 3px #fde68a, 0 0 0 6px #b45309, 0 0 0 8px #fde68a`,
+      };
+    case "shadow":
+      return { borderRadius: 14, boxShadow: `0 18px 40px -10px ${c}66, 0 6px 18px ${c}33` };
+    case "ring":
+      return { borderRadius: 9999, border: `3px solid ${c}` };
+    case "corners":
+      return {
+        borderRadius: 4,
+        backgroundImage:
+          `linear-gradient(${c},${c}),linear-gradient(${c},${c}),linear-gradient(${c},${c}),linear-gradient(${c},${c}),` +
+          `linear-gradient(${c},${c}),linear-gradient(${c},${c}),linear-gradient(${c},${c}),linear-gradient(${c},${c})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize:
+          "3px 22px, 22px 3px, 3px 22px, 22px 3px, 3px 22px, 22px 3px, 3px 22px, 22px 3px",
+        backgroundPosition:
+          "left top, left top, right top, right top, left bottom, left bottom, right bottom, right bottom",
+      };
+    default:
+      return {};
+  }
+}
 
 const RATIOS: { id: string; label: string }[] = [
   { id: "free", label: "آزاد" },
@@ -82,6 +146,7 @@ const DEFAULT_STYLE: Style = {
   align: "right",
   shadow: false,
   ratio: "free",
+  frame: "none",
 };
 
 function ConverterPage() {
@@ -118,6 +183,7 @@ function ConverterPage() {
       underline: Math.random() > 0.7,
       align: aligns[Math.floor(Math.random() * aligns.length)],
       shadow: Math.random() > 0.5,
+      frame: FRAMES[Math.floor(Math.random() * FRAMES.length)].id,
     });
   };
 
@@ -224,6 +290,7 @@ function ConverterPage() {
             aspectRatio: st.ratio === "free" ? undefined : st.ratio.replace(":", " / "),
             alignItems: "center",
             justifyContent: st.align === "right" ? "flex-end" : st.align === "left" ? "flex-start" : "center",
+            ...frameStyle(st.frame, st.fg),
           }}
         >
           <div style={{ width: "100%", textAlign: st.align, wordBreak: "break-word", overflowWrap: "anywhere" }}>
@@ -248,7 +315,30 @@ function ConverterPage() {
               </div>
             </div>
 
-            {/* Color presets */}
+            {/* Frame */}
+            <div>
+              <div className="text-xs text-muted-foreground mb-1.5" style={{ fontFamily: "system-ui" }}>فریم اسٹائل</div>
+              <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
+                {FRAMES.map(fr => (
+                  <button
+                    key={fr.id}
+                    onClick={() => updateStyle(font.id, { frame: fr.id })}
+                    className={`shrink-0 min-h-12 px-2 rounded text-[10px] font-semibold flex items-center justify-center ${st.frame === fr.id ? "ring-2 ring-primary" : ""}`}
+                    style={{
+                      width: 56,
+                      background: st.bg,
+                      color: st.fg,
+                      ...frameStyle(fr.id, st.fg),
+                    }}
+                    title={fr.label}
+                  >ابج</button>
+                ))}
+              </div>
+              <div className="text-[10px] text-muted-foreground mt-1" style={{ fontFamily: "system-ui" }}>
+                {FRAMES.find(f => f.id === st.frame)?.label}
+              </div>
+            </div>
+
             <div>
               <div className="text-xs text-muted-foreground mb-1.5" style={{ fontFamily: "system-ui" }}>ڈیزائن پریسیٹس</div>
               <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
