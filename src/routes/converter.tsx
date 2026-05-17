@@ -209,7 +209,7 @@ function ConverterPage() {
         {/* Preview */}
         <div
           ref={(el) => { refs.current[font.id] = el; }}
-          className="rounded-lg p-4 sm:p-6 overflow-hidden"
+          className="rounded-lg p-4 sm:p-6 overflow-hidden flex"
           style={{
             fontFamily: fontStack,
             fontSize: st.size,
@@ -219,14 +219,16 @@ function ConverterPage() {
             fontWeight: st.bold ? 700 : 400,
             fontStyle: st.italic ? "italic" : "normal",
             textDecoration: st.underline ? "underline" : "none",
-            textAlign: st.align,
             textShadow: st.shadow ? "0 2px 8px rgba(0,0,0,0.35)" : "none",
-            minHeight: 140,
-            wordBreak: "break-word",
-            overflowWrap: "anywhere",
+            minHeight: st.ratio === "free" ? 140 : undefined,
+            aspectRatio: st.ratio === "free" ? undefined : st.ratio.replace(":", " / "),
+            alignItems: "center",
+            justifyContent: st.align === "right" ? "flex-end" : st.align === "left" ? "flex-start" : "center",
           }}
         >
-          {text || SAMPLE}
+          <div style={{ width: "100%", textAlign: st.align, wordBreak: "break-word", overflowWrap: "anywhere" }}>
+            {text || SAMPLE}
+          </div>
         </div>
 
         {/* Controls — only if active */}
