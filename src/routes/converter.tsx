@@ -60,7 +60,18 @@ type Style = {
   shadow: boolean;
   ratio: string; // "free" | "1:1" | "9:16" | "16:9" | "4:5" | "3:4" | "4:3"
   frame: string; // frame id
+  sentenceBreak: boolean; // ہر جملے کے بعد نئی سطر
 };
+
+/** ہر جملے (۔ ؟ ! .) کے بعد نئی سطر ڈالیں */
+function splitSentences(input: string): string {
+  if (!input) return input;
+  // Insert newline after Urdu/Arabic full stop ۔, question marks (؟/?), exclamation (!), and Latin period
+  return input
+    .replace(/([۔!؟?])\s*/g, "$1\n")
+    .replace(/\n{2,}/g, "\n")
+    .trim();
+}
 
 const FRAMES: { id: string; label: string }[] = [
   { id: "none", label: "بغیر فریم" },
@@ -147,6 +158,7 @@ const DEFAULT_STYLE: Style = {
   shadow: false,
   ratio: "free",
   frame: "none",
+  sentenceBreak: false,
 };
 
 function ConverterPage() {
@@ -293,8 +305,8 @@ function ConverterPage() {
             ...frameStyle(st.frame, st.fg),
           }}
         >
-          <div style={{ width: "100%", textAlign: st.align, wordBreak: "break-word", overflowWrap: "anywhere" }}>
-            {text || SAMPLE}
+          <div style={{ width: "100%", textAlign: st.align, wordBreak: "break-word", overflowWrap: "anywhere", whiteSpace: "pre-wrap" }}>
+            {st.sentenceBreak ? splitSentences(text || SAMPLE) : (text || SAMPLE)}
           </div>
         </div>
 
@@ -387,6 +399,19 @@ function ConverterPage() {
                 <input type="range" min={1.4} max={3.4} step={0.1} value={st.lineHeight} onChange={(e) => updateStyle(font.id, { lineHeight: +e.target.value })} className="w-full h-6" />
               </label>
             </div>
+
+            {/* Sentence break toggle */}
+            <label className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2 text-xs cursor-pointer" style={{ fontFamily: "system-ui" }}>
+              <span style={{ fontFamily: "'Noto Nastaliq Urdu', serif", lineHeight: 1.8 }}>
+                ہر جملے (۔ ؟ !) کے بعد نئی سطر
+              </span>
+              <input
+                type="checkbox"
+                checked={st.sentenceBreak}
+                onChange={(e) => updateStyle(font.id, { sentenceBreak: e.target.checked })}
+                className="h-5 w-5 cursor-pointer"
+              />
+            </label>
 
             {/* Toggles + alignment */}
             <div className="flex flex-wrap gap-1.5" style={{ fontFamily: "system-ui" }}>
