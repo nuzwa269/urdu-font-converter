@@ -400,6 +400,19 @@ function ConverterPage() {
               </label>
             </div>
 
+            {/* Sentence break toggle */}
+            <label className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2 text-xs cursor-pointer" style={{ fontFamily: "system-ui" }}>
+              <span style={{ fontFamily: "'Noto Nastaliq Urdu', serif", lineHeight: 1.8 }}>
+                ہر جملے (۔ ؟ !) کے بعد نئی سطر
+              </span>
+              <input
+                type="checkbox"
+                checked={st.sentenceBreak}
+                onChange={(e) => updateStyle(font.id, { sentenceBreak: e.target.checked })}
+                className="h-5 w-5 cursor-pointer"
+              />
+            </label>
+
             {/* Toggles + alignment */}
             <div className="flex flex-wrap gap-1.5" style={{ fontFamily: "system-ui" }}>
               {([
