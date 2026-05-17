@@ -158,6 +158,7 @@ const DEFAULT_STYLE: Style = {
   shadow: false,
   ratio: "free",
   frame: "none",
+  sentenceBreak: false,
 };
 
 function ConverterPage() {
