@@ -149,8 +149,8 @@ const RATIOS: { id: string; label: string }[] = [
 const DEFAULT_STYLE: Style = {
   fg: "#111111",
   bg: "#ffffff",
-  size: 30,
-  lineHeight: 2.2,
+  size: 20,
+  lineHeight: 1.8,
   bold: false,
   italic: false,
   underline: false,
