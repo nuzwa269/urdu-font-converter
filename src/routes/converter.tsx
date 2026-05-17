@@ -101,12 +101,9 @@ function frameStyle(frame: string, fg: string): React.CSSProperties {
       };
     case "gold":
       return {
-        border: "4px solid transparent",
-        backgroundImage: `var(--card-bg), linear-gradient(135deg,#f59e0b,#fde68a,#b45309,#fde68a,#f59e0b)`,
-        backgroundOrigin: "border-box",
-        backgroundClip: "padding-box, border-box",
         borderRadius: 14,
-      } as React.CSSProperties;
+        boxShadow: `0 0 0 3px #fde68a, 0 0 0 6px #b45309, 0 0 0 8px #fde68a`,
+      };
     case "shadow":
       return { borderRadius: 14, boxShadow: `0 18px 40px -10px ${c}66, 0 6px 18px ${c}33` };
     case "ring":
