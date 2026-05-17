@@ -506,7 +506,7 @@ export function ConverterPage() {
           <a href="/" className="px-3 py-2 rounded bg-secondary text-secondary-foreground text-sm no-underline" style={{ fontFamily: "system-ui" }}>←</a>
           <div className="min-w-0">
             <h1 className="text-2xl md:text-3xl font-bold leading-tight">اردو فونٹ کنورٹر</h1>
-            <p className="text-sm text-muted-foreground mt-1">7 فونٹس، رنگ، ڈیزائن اور PNG ڈاؤنلوڈ</p>
+            <p className="text-sm text-muted-foreground mt-1">فونٹس، رنگ، ڈیزائن اور PNG ڈاؤنلوڈ</p>
           </div>
         </div>
       </header>
@@ -525,19 +525,49 @@ export function ConverterPage() {
           />
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => FONTS.forEach(f => randomDesign(f.id))}
+              onClick={() => allFonts.forEach(f => randomDesign(f.id))}
               className="min-h-10 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold"
             >🎲 سب کے لیے رینڈم ڈیزائن</button>
             <button
-              onClick={() => setStyles(FONTS.reduce((acc, f) => ({ ...acc, [f.id]: { ...DEFAULT_STYLE } }), {}))}
+              onClick={() => setStyles(allFonts.reduce((acc, f) => ({ ...acc, [f.id]: { ...DEFAULT_STYLE } }), {}))}
               className="min-h-10 px-4 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold"
             >ری سیٹ</button>
+          </div>
+
+          {/* Custom font upload */}
+          <div className="border-t border-border pt-3 space-y-2">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="text-sm font-semibold">اپنا فونٹ اپ لوڈ کریں</div>
+              <span className="text-[11px] text-muted-foreground" style={{ fontFamily: "system-ui" }}>TTF / OTF / WOFF / WOFF2</span>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2"
+              multiple
+              onChange={(e) => handleFontUpload(e.target.files)}
+              className="block w-full text-xs text-muted-foreground file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-primary file:text-primary-foreground file:font-semibold file:cursor-pointer cursor-pointer"
+              style={{ fontFamily: "system-ui" }}
+            />
+            {uploadError && (
+              <div className="text-xs text-destructive">{uploadError}</div>
+            )}
+            {customFonts.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {customFonts.map(cf => (
+                  <span key={cf.id} className="inline-flex items-center gap-1.5 rounded-full bg-secondary text-secondary-foreground text-xs px-2.5 py-1">
+                    <span style={{ fontFamily: cf.family + ", " + (cf.fallback || "serif") }}>{cf.name}</span>
+                    <button onClick={() => removeCustomFont(cf.id)} className="opacity-70 hover:opacity-100" title="حذف کریں" style={{ fontFamily: "system-ui" }}>✕</button>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
         {/* Cards grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {FONTS.map(renderCard)}
+          {allFonts.map(renderCard)}
         </section>
       </main>
     </div>
