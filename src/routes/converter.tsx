@@ -146,6 +146,7 @@ const DEFAULT_STYLE: Style = {
   align: "right",
   shadow: false,
   ratio: "free",
+  frame: "none",
 };
 
 function ConverterPage() {
