@@ -58,7 +58,18 @@ type Style = {
   underline: boolean;
   align: "right" | "center" | "left";
   shadow: boolean;
+  ratio: string; // "free" | "1:1" | "9:16" | "16:9" | "4:5" | "3:4" | "4:3"
 };
+
+const RATIOS: { id: string; label: string }[] = [
+  { id: "free", label: "آزاد" },
+  { id: "1:1", label: "1:1" },
+  { id: "9:16", label: "9:16" },
+  { id: "16:9", label: "16:9" },
+  { id: "4:5", label: "4:5" },
+  { id: "3:4", label: "3:4" },
+  { id: "4:3", label: "4:3" },
+];
 
 const DEFAULT_STYLE: Style = {
   fg: "#111111",
@@ -70,6 +81,7 @@ const DEFAULT_STYLE: Style = {
   underline: false,
   align: "right",
   shadow: false,
+  ratio: "free",
 };
 
 function ConverterPage() {
