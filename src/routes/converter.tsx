@@ -58,7 +58,18 @@ type Style = {
   underline: boolean;
   align: "right" | "center" | "left";
   shadow: boolean;
+  ratio: string; // "free" | "1:1" | "9:16" | "16:9" | "4:5" | "3:4" | "4:3"
 };
+
+const RATIOS: { id: string; label: string }[] = [
+  { id: "free", label: "آزاد" },
+  { id: "1:1", label: "1:1" },
+  { id: "9:16", label: "9:16" },
+  { id: "16:9", label: "16:9" },
+  { id: "4:5", label: "4:5" },
+  { id: "3:4", label: "3:4" },
+  { id: "4:3", label: "4:3" },
+];
 
 const DEFAULT_STYLE: Style = {
   fg: "#111111",
@@ -70,6 +81,7 @@ const DEFAULT_STYLE: Style = {
   underline: false,
   align: "right",
   shadow: false,
+  ratio: "free",
 };
 
 function ConverterPage() {
@@ -197,7 +209,7 @@ function ConverterPage() {
         {/* Preview */}
         <div
           ref={(el) => { refs.current[font.id] = el; }}
-          className="rounded-lg p-4 sm:p-6 overflow-hidden"
+          className="rounded-lg p-4 sm:p-6 overflow-hidden flex"
           style={{
             fontFamily: fontStack,
             fontSize: st.size,
@@ -207,19 +219,35 @@ function ConverterPage() {
             fontWeight: st.bold ? 700 : 400,
             fontStyle: st.italic ? "italic" : "normal",
             textDecoration: st.underline ? "underline" : "none",
-            textAlign: st.align,
             textShadow: st.shadow ? "0 2px 8px rgba(0,0,0,0.35)" : "none",
-            minHeight: 140,
-            wordBreak: "break-word",
-            overflowWrap: "anywhere",
+            minHeight: st.ratio === "free" ? 140 : undefined,
+            aspectRatio: st.ratio === "free" ? undefined : st.ratio.replace(":", " / "),
+            alignItems: "center",
+            justifyContent: st.align === "right" ? "flex-end" : st.align === "left" ? "flex-start" : "center",
           }}
         >
-          {text || SAMPLE}
+          <div style={{ width: "100%", textAlign: st.align, wordBreak: "break-word", overflowWrap: "anywhere" }}>
+            {text || SAMPLE}
+          </div>
         </div>
 
         {/* Controls — only if active */}
         {activeId === font.id && (
           <div className="space-y-3 border-t border-border pt-3">
+            {/* Aspect ratio */}
+            <div>
+              <div className="text-xs text-muted-foreground mb-1.5" style={{ fontFamily: "system-ui" }}>کارڈ سائز (ریشو)</div>
+              <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1" style={{ fontFamily: "system-ui" }}>
+                {RATIOS.map(r => (
+                  <button
+                    key={r.id}
+                    onClick={() => updateStyle(font.id, { ratio: r.id })}
+                    className={`shrink-0 min-h-9 px-3 rounded text-xs font-semibold ${st.ratio === r.id ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}
+                  >{r.label}</button>
+                ))}
+              </div>
+            </div>
+
             {/* Color presets */}
             <div>
               <div className="text-xs text-muted-foreground mb-1.5" style={{ fontFamily: "system-ui" }}>ڈیزائن پریسیٹس</div>
