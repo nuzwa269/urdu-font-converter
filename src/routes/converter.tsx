@@ -163,16 +163,64 @@ const DEFAULT_STYLE: Style = {
 
 export function ConverterPage() {
   const [text, setText] = useState(SAMPLE);
+  const [customFonts, setCustomFonts] = useState<Font[]>([]);
+  const allFonts = [...FONTS, ...customFonts];
   // Per-font styles
   const [styles, setStyles] = useState<Record<string, Style>>(() =>
     FONTS.reduce((acc, f) => ({ ...acc, [f.id]: { ...DEFAULT_STYLE } }), {})
   );
   const [activeId, setActiveId] = useState(FONTS[0].id);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const refs = useRef<Record<string, HTMLDivElement | null>>({});
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const active = FONTS.find(f => f.id === activeId)!;
-  const aStyle = styles[activeId];
+  const active = allFonts.find(f => f.id === activeId) || allFonts[0];
+  const aStyle = styles[activeId] || DEFAULT_STYLE;
+
+  const handleFontUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setUploadError(null);
+    const added: Font[] = [];
+    for (const file of Array.from(files)) {
+      try {
+        const ext = file.name.split(".").pop()?.toLowerCase();
+        if (!["ttf", "otf", "woff", "woff2"].includes(ext || "")) {
+          setUploadError("صرف TTF, OTF, WOFF, WOFF2 فائلز قابل قبول ہیں");
+          continue;
+        }
+        const buf = await file.arrayBuffer();
+        const baseName = file.name.replace(/\.(ttf|otf|woff2?|TTF|OTF|WOFF2?)$/i, "");
+        const id = "custom-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7);
+        const family = "UserFont_" + id.replace(/-/g, "_");
+        const face = new FontFace(family, buf);
+        await face.load();
+        (document as any).fonts.add(face);
+        const font: Font = {
+          id,
+          name: baseName,
+          family: `'${family}'`,
+          fallback: "'Noto Nastaliq Urdu', serif",
+        };
+        added.push(font);
+        setStyles(s => ({ ...s, [id]: { ...DEFAULT_STYLE } }));
+      } catch (e) {
+        console.error(e);
+        setUploadError("فونٹ لوڈ نہیں ہو سکا: " + file.name);
+      }
+    }
+    if (added.length) {
+      setCustomFonts(prev => [...prev, ...added]);
+      setActiveId(added[0].id);
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeCustomFont = (id: string) => {
+    setCustomFonts(prev => prev.filter(f => f.id !== id));
+    setStyles(s => { const c = { ...s }; delete c[id]; return c; });
+    if (activeId === id) setActiveId(FONTS[0].id);
+  };
 
   const updateStyle = (id: string, patch: Partial<Style>) =>
     setStyles(s => ({ ...s, [id]: { ...s[id], ...patch } }));
