@@ -60,7 +60,18 @@ type Style = {
   shadow: boolean;
   ratio: string; // "free" | "1:1" | "9:16" | "16:9" | "4:5" | "3:4" | "4:3"
   frame: string; // frame id
+  sentenceBreak: boolean; // ہر جملے کے بعد نئی سطر
 };
+
+/** ہر جملے (۔ ؟ ! .) کے بعد نئی سطر ڈالیں */
+function splitSentences(input: string): string {
+  if (!input) return input;
+  // Insert newline after Urdu/Arabic full stop ۔, question marks (؟/?), exclamation (!), and Latin period
+  return input
+    .replace(/([۔!؟?])\s*/g, "$1\n")
+    .replace(/\n{2,}/g, "\n")
+    .trim();
+}
 
 const FRAMES: { id: string; label: string }[] = [
   { id: "none", label: "بغیر فریم" },
