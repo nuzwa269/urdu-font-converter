@@ -49,9 +49,23 @@ function Index() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-8 space-y-6 sm:space-y-8 [&_code]:break-all [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_section_h2]:break-words">
-        {/* Method 1: Bookmarklet */}
+        {/* Method 1: Font converter */}
         <section className="rounded-xl border border-border p-4 sm:p-5 bg-card">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۱۔ بُک مارک لیٹ (سب سے آسان)</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۱۔ اردو فونٹ کنورٹر</h2>
+          <p className="text-muted-foreground leading-loose mb-4 text-sm sm:text-base">
+            اپنا اردو متن لکھ کر سات خوبصورت فونٹس میں دیکھیں — جمیل نوری نستعلیق، القلم تاج، علوی نستعلیق، مہر نستعلیق، گلزار، نوٹو نستعلیق، اور امیری۔ متن کاپی کریں یا تصویر (PNG) ڈاؤن لوڈ کریں۔
+          </p>
+          <a
+            href="/converter"
+            className="inline-flex items-center justify-center min-h-12 px-5 py-3 rounded-lg bg-primary text-primary-foreground font-bold no-underline"
+          >
+            ✍ کنورٹر کھولیں
+          </a>
+        </section>
+
+        {/* Method 2: Bookmarklet */}
+        <section className="rounded-xl border border-border p-4 sm:p-5 bg-card">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۲۔ بُک مارک لیٹ (سب سے آسان)</h2>
           <p className="text-muted-foreground leading-loose mb-4 text-sm sm:text-base">
             نیچے دیے گئے بٹن کو دبا کر رکھیں اور اسے اپنے براؤزر کے بُک مارکس میں محفوظ کر لیں۔ پھر کسی بھی اردو ویب سائٹ پر جا کر اس بُک مارک پر ٹیپ کریں — ٹول چالو ہو جائے گا۔
           </p>
