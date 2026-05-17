@@ -96,9 +96,9 @@ function Index() {
           </details>
         </section>
 
-        {/* Method 2: Extension */}
+        {/* Method 3: Extension */}
         <section className="rounded-xl border border-border p-4 sm:p-5 bg-card">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۲۔ اینڈرائیڈ ایکسٹینشن (Kiwi / Firefox)</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-2">۳۔ اینڈرائیڈ ایکسٹینشن (Kiwi / Firefox)</h2>
           <p className="text-muted-foreground leading-loose mb-4 text-sm sm:text-base">
             Kiwi Browser یا Firefox for Android میں ایکسٹینشن انسٹال کر کے ہر سائٹ پر خودکار طور پر نستعلیق فونٹ لگائیں۔
           </p>
