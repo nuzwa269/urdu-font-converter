@@ -494,6 +494,14 @@ export function ConverterPage() {
           <button onClick={() => copy(font, st)} className="min-h-11 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-sm font-semibold">کاپی</button>
           <button onClick={() => downloadPng(font)} disabled={busyId === font.id} className="min-h-11 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-bold disabled:opacity-60">{busyId === font.id ? "..." : "PNG ڈاؤنلوڈ"}</button>
         </div>
+        {font.download && (
+          <a
+            href={font.download}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-center min-h-11 px-3 py-2.5 rounded-lg bg-accent text-accent-foreground text-sm font-semibold no-underline"
+          >⬇ فونٹ ڈاؤنلوڈ کریں</a>
+        )}
       </div>
     );
   };
