@@ -1,0 +1,61 @@
+/* Urdu Font Converter - WordPress plugin styles */
+.urdu-converter-root, .urdu-converter-root * { box-sizing: border-box; }
+.urdu-converter-root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #111;
+  max-width: 100%;
+}
+.uc-card {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 10px 0;
+}
+.uc-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.uc-row.between { justify-content: space-between; }
+.uc-label { font-size: 12px; color: #6b7280; margin-bottom: 6px; }
+.uc-btn {
+  min-height: 36px; padding: 6px 12px; border-radius: 8px;
+  border: 1px solid #e5e7eb; background: #f3f4f6; color: #111;
+  font-size: 13px; cursor: pointer; font-weight: 600;
+}
+.uc-btn:hover { background: #e5e7eb; }
+.uc-btn.primary { background: #111; color: #fff; border-color: #111; }
+.uc-btn.primary:hover { background: #000; }
+.uc-btn.active { background: #111; color: #fff; border-color: #111; }
+.uc-btn.sm { min-height: 30px; padding: 4px 8px; font-size: 12px; }
+.uc-input, .uc-textarea {
+  width: 100%; padding: 8px 10px; border: 1px solid #e5e7eb;
+  border-radius: 8px; font-size: 14px; background: #fff; color: #111;
+}
+.uc-textarea { min-height: 90px; resize: vertical; font-family: inherit; }
+.uc-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 720px) { .uc-grid { grid-template-columns: 1fr 1fr; } }
+.uc-preview {
+  border-radius: 10px; padding: 20px; min-height: 140px;
+  display: flex; align-items: center; overflow: hidden;
+}
+.uc-scroll { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+.uc-swatch {
+  min-width: 38px; height: 38px; border-radius: 8px; border: 1px solid #d1d5db; cursor: pointer;
+}
+.uc-swatch.active { outline: 2px solid #111; outline-offset: 2px; }
+.uc-frame-chip {
+  flex: 0 0 auto; width: 64px; height: 44px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; cursor: pointer; background: #fff;
+}
+.uc-frame-chip.active { outline: 2px solid #2563eb; outline-offset: 2px; }
+.uc-section-title { font-weight: 700; font-size: 14px; margin: 10px 0 6px; }
+.uc-hint { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+.uc-error { color: #b91c1c; font-size: 12px; margin-top: 6px; }
+.uc-tab {
+  padding: 8px 12px; border-radius: 8px; border: 1px solid transparent;
+  background: transparent; cursor: pointer; font-size: 13px; font-weight: 600;
+  color: #6b7280;
+}
+.uc-tab.active { background: #111; color: #fff; }
+.uc-range { width: 100%; }
+.uc-flex { display: flex; gap: 8px; align-items: center; }
+.uc-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
